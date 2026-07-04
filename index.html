@@ -1,109 +1,2483 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Báo cáo Vĩ mô Mỹ — Tháng</title>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<title>Vĩ mô Mỹ — Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 <style>
-  :root{--bg:#0b1220;--card:#111a2e;--card2:#0f1729;--bd:#1e2b45;--tx:#e5edf7;--mut:#8ba0bd;--acc:#4ade80;}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  .wrap{max-width:960px;margin:0 auto;padding:24px 18px 80px}
-  .hero{background:linear-gradient(160deg,#132241,#0d1729);border:1px solid var(--bd);border-radius:16px;padding:24px;margin-bottom:20px}
-  .hero h1{margin:0 0 4px;font-size:26px}
-  .sub{color:var(--mut);font-size:13px;margin-bottom:14px}
-  .takeaway{background:#0b1526;border-left:4px solid var(--acc);border-radius:8px;padding:12px 14px;color:#cfe0f5;font-size:14px}
-  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .badge{font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;border:1px solid var(--bd);background:#0e1a30}
-  .badge b{color:var(--mut);font-weight:500;margin-right:5px}
-  .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:20px}
-  .card h2.section-t{margin:0 0 14px;font-size:16px;color:var(--acc)}
-  .chart-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:12px;color:var(--mut)}
-  .chart-legend span{display:inline-flex;align-items:center;gap:6px}
-  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
-  .report h1{font-size:22px;border-bottom:1px solid var(--bd);padding-bottom:8px;margin-top:8px}
-  .report h2{font-size:18px;margin-top:28px;color:#dfeaf8}
-  .report h3{font-size:15px;margin-top:20px;color:var(--mut)}
-  .report table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
-  .report th,.report td{border:1px solid var(--bd);padding:7px 9px;text-align:left}
-  .report th{background:#0e1a30;color:#bcd0ec}
-  .report tr:nth-child(even) td{background:#0d1526}
-  .report blockquote{border-left:3px solid var(--mut);margin:12px 0;padding:6px 14px;color:var(--mut);background:#0c1424;border-radius:6px}
-  .report code{background:#0c1424;padding:2px 6px;border-radius:5px;font-size:12px}
-  .report hr{border:0;border-top:1px solid var(--bd);margin:22px 0}
-  .report a{color:var(--acc)}
-  .foot{color:var(--mut);font-size:12px;text-align:center;margin-top:30px}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="hero">
-    <h1 id="hero-title">Báo cáo Vĩ mô Mỹ</h1>
-    <div class="sub" id="hero-sub"></div>
-    <div class="takeaway" id="hero-takeaway"></div>
-    <div class="badges" id="hero-badges"></div>
-  </div>
+  :root {
+    --bg: #0f1419;
+    --panel: #1a2028;
+    --border: #2a3441;
+    --text: #e5e9ed;
+    --muted: #8b96a3;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro", "Inter", sans-serif;
+  }
+  header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  h1 { margin: 0; font-size: 20px; font-weight: 600; }
+  .meta { color: var(--muted); font-size: 12px; }
+  .container { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
+  section { margin-bottom: 32px; }
+  h2 { font-size: 15px; font-weight: 600; margin: 0 0 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .grid { display: grid; gap: 16px; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 1000px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px) { .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .kpi-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .kpi-value { font-size: 22px; font-weight: 600; margin-top: 4px; font-feature-settings: "tnum"; }
+  .kpi-delta { font-size: 12px; margin-top: 4px; font-feature-settings: "tnum"; }
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .flat { color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; }
+  td.num { text-align: right; font-feature-settings: "tnum"; }
+  .surprise-beat { color: var(--green); }
+  .surprise-miss { color: var(--red); }
+  .surprise-inline { color: var(--muted); }
+  .chart-box { position: relative; height: 180px; margin-top: 8px; }
+  .empty { color: var(--muted); padding: 20px; text-align: center; font-style: italic; }
+  .report-link { color: var(--blue); text-decoration: none; }
+  .report-link:hover { text-decoration: underline; }
+  /* Report search */
+  .report-search { position: relative; margin-bottom: 20px; }
+  .report-search-box { position: relative; display: flex; align-items: center; }
+  .report-search-box .rs-icon {
+    position: absolute; left: 14px; color: var(--muted); font-size: 14px; pointer-events: none;
+  }
+  #report-search-input {
+    width: 100%; padding: 12px 40px; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 10px; color: var(--text);
+    font-family: inherit; font-size: 14px; outline: none; transition: border-color .2s;
+  }
+  #report-search-input::placeholder { color: var(--muted); }
+  #report-search-input:focus { border-color: var(--blue); }
+  #report-search-clear {
+    position: absolute; right: 10px; background: transparent; border: none;
+    color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1;
+    padding: 4px 8px; border-radius: 6px;
+  }
+  #report-search-clear:hover { color: var(--text); background: var(--border); }
+  .report-search-results {
+    margin-top: 8px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; display: none;
+  }
+  .report-search-results.open { display: block; }
+  .rs-result {
+    padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .rs-result:last-child { border-bottom: none; }
+  .rs-result:hover { background: var(--border); }
+  .rs-result .rs-date { font-weight: 600; color: var(--blue); min-width: 92px; }
+  .rs-result .rs-take { color: var(--muted); font-size: 12px; flex: 1; min-width: 0; }
+  .rs-empty { padding: 14px; color: var(--muted); text-align: center; font-style: italic; }
+  .rs-count { padding: 8px 14px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    background: var(--border);
+    color: var(--text);
+  }
+  .pill.hawkish { background: #7f1d1d; color: #fecaca; }
+  .pill.dovish { background: #14532d; color: #bbf7d0; }
+  .pill.neutral { background: var(--border); }
 
-  <div class="card" id="rot-card">
-    <h2 class="section-t" id="rot-title">Dự báo luân chuyển dòng tiền</h2>
-    <canvas id="rotChart" height="300"></canvas>
-    <div class="chart-legend" id="rot-legend"></div>
-  </div>
+  /* Clickable elements */
+  .clickable { cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+  .clickable:hover { border-color: var(--blue); background: #1e2632; }
+  tr.clickable:hover { background: #1e2632; }
+  .info-icon {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--muted);
+    text-align: center;
+    font-size: 10px;
+    line-height: 14px;
+    margin-left: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .info-icon:hover { background: var(--blue); color: white; }
 
-  <div class="card report" id="report"></div>
-
-  <div class="foot" id="foot"></div>
-</div>
-
-<script type="application/json" id="payload">{"month": "2026-06", "fm": {"month": "2026-06", "key_takeaway": "No-landing tháng 6: growth beat trên diện rộng (NFP +172k, Retail +0.9%, GDP Q1 rev 2.1%, ISM Mfg 54.0) nhưng lạm phát hard-data còn nóng (CPI 4.2%, Core PCE 3.4%) khiến Fed hawkish-hold (dot plot dịch LÊN). Dòng tiền rời XLK (-8.8% 1M) sang XLV/XLF/XLI khi AI capex bị thử thách và curve giữ dương +0.30.", "regime": "expansion", "fed_stance": "hawkish", "economic_health": "strong"}, "body": "\n# Vĩ mô Mỹ — 2026-06\n\n## Sức khoẻ tổng thể: **strong (no-landing)**\n\n| Nhóm | Verdict | Xu hướng |\n|---|---|---|\n| Lạm phát | 🟡 STICKY | → đi ngang (hard-data nóng, PPI/PCE chưa hạ) |\n| Lao động | 🟢 MẠNH | → chặt (JOLTS 7.59M beat, NFP +172k) |\n| Tăng trưởng | 🟢 TĂNG | → vững (ISM >54, Retail bùng nổ) |\n| Niềm tin & Tiêu dùng | 🟡 HỖN HỢP | ↑ sentiment hồi nhưng <50, CB Conf hụt |\n| Nhà ở | 🔴 NGUỘI | ↓ Starts -15.4%, New Home Sales -7.3% |\n| Fed & Lãi suất | 🔴 HAWKISH | dot plot dịch LÊN, hold 3.75% |\n\n**Tháng 6 là \"no-landing\": kinh tế thực quá khỏe để Fed vội cắt, lạm phát nền còn nóng — hawkish hold đè định giá tech, dòng tiền xoay sang defensives/financials/cyclicals.**\n\n---\n\n## 1. Lạm phát — 🟡 STICKY\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 10/06 | Core CPI (MoM) | +0.2% | +0.3% | ↓ | 🟢 Cool |\n| 10/06 | Core CPI (YoY) | +2.9% | +2.9% | ↑ +0.10pp | 🟡 Inline |\n| 10/06 | CPI (MoM) | +0.5% | +0.5% | ↓ | 🟡 Inline |\n| 10/06 | CPI (YoY) | +4.2% | +4.2% | ↑ +0.40pp | 🟡 Inline |\n| 11/06 | Core PPI (MoM) | +0.4% | +0.5% | ↓ | 🟢 Cool |\n| 11/06 | Core PPI (YoY) | +4.9% | +5.4% | → | 🟢 Cool |\n| 11/06 | PPI (MoM) | +1.1% | +0.7% | → | 🔴 Nóng |\n| 11/06 | PPI (YoY) | +6.5% | +6.4% | ↑ +0.80pp | 🟡 Inline |\n\n**Kết luận:** Core CPI/PPI MoM hạ nhiệt (0.2% / 0.4%) cứu narrative disinflation giữa tháng, nhưng headline vẫn dai — CPI YoY 4.2% (cách mục tiêu 2% còn +2.2pp), Core PCE YoY nhích lên 3.4%, PPI headline +1.1% MoM nóng. Đây là \"sticky, không phải cooling\" — soft-data dovish nhưng hard-data chưa xác nhận.\n\n---\n\n## 2. Lao động — 🟢 MẠNH\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 02/06 | JOLTS Job Openings | 7.62M | 6.86M | ↑ | 🟢 Tốt |\n| 03/06 | ADP Nonfarm Employment | +122k | +118k | ↑ | 🟢 Tốt |\n| 04/06 | Initial Jobless Claims | 225k | 214k | ↑ | 🔴 Nóng |\n| 05/06 | Nonfarm Payrolls | +172k | +85k | ↓ | 🟢 Tốt |\n| 05/06 | Private Nonfarm Payrolls | +120k | +85k | ↓ | 🟢 Tốt |\n| 05/06 | Unemployment Rate | 4.3% | 4.3% | → | 🟡 Inline |\n| 05/06 | Average Hourly Earnings (YoY) | +3.4% | +3.4% | ↓ -0.20pp | 🟡 Inline |\n| 11/06 | Initial Jobless Claims | 229k | 220k | ↑ | 🔴 Nóng |\n| 18/06 | Initial Jobless Claims | 226k | 225k | ↓ | 🟡 Inline |\n| 25/06 | Initial Jobless Claims | 215k | 225k | ↓ | 🟢 Cool |\n| 30/06 | JOLTS Job Openings | 7.59M | 7.28M | ↑ | 🟢 Tốt |\n\n**Kết luận:** NFP +172k gấp đôi dự báo + JOLTS 7.6M beat mạnh hai đầu tháng xóa lo hạ cánh cứng; claims dao động 215-229k (cooling nhẹ nhưng chưa breakout). Sahm Rule +0.10 — CHƯA kích hoạt (ngưỡng 0.50), thất nghiệp 3mo-avg 4.3% vs đáy 4.2%; lao động vẫn chặt, AHE +3.4% giảm nhẹ giảm áp lực lương.\n\n---\n\n## 3. Tăng trưởng — 🟢 TĂNG\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 01/06 | ISM Manufacturing PMI | 54.0 | 53.3 | ↑ | 🟢 Tốt |\n| 01/06 | ISM Manufacturing Prices | 82.1 | 85.3 | ↓ | 🟢 Cool |\n| 03/06 | ISM Non-Mfg (Services) PMI | 54.5 | 53.7 | ↑ | 🟢 Tốt |\n| 03/06 | ISM Services New Orders | 57.3 | 53.4 | ↑ | 🟢 Tốt |\n| 03/06 | ISM Services Prices | 71.3 | 72.3 | ↑ | 🟡 Sticky |\n| 03/06 | Factory Orders (MoM) | +4.8% | +4.6% | ↑ | 🟢 Tốt |\n| 17/06 | Retail Sales (MoM) | +0.9% | +0.5% | ↑ | 🟢 Tốt |\n| 17/06 | Retail Control (MoM) | +0.7% | +0.4% | ↑ | 🟢 Tốt |\n| 18/06 | Philadelphia Fed Mfg | 10.3 | 9.8 | ↑ | 🟢 Tốt |\n| 23/06 | S&P Global Mfg PMI | 55.7 | 54.6 | ↑ | 🟢 Tốt |\n| 23/06 | Richmond Manufacturing | 4 | 8 | ↓ | 🔴 Yếu |\n| 25/06 | GDP Q1 (QoQ ann., rev) | +2.1% | +1.6% | ↑ | 🟢 Tốt |\n| 25/06 | Core Durable Goods (MoM) | +1.3% | +0.5% | ↑ | 🟢 Tốt |\n| 25/06 | Goods Orders Non-Def Ex-Air | +1.6% | +0.6% | ↑ | 🟢 Tốt |\n| 30/06 | Chicago PMI | 56.7 | 55.7 | ↓ -6.0pp | 🟡 Inline |\n\n**Kết luận:** Cả Mfg (ISM 54.0) lẫn Services (54.5) mở rộng vững >54, Retail Sales +0.9% shock-above và GDP Q1 revised lên 2.1% xác nhận cầu thực khỏe — expansion broad. Điểm gợn: Chicago PMI rơi 6pp và Richmond sụp (4 vs 8) báo động lượng chậm dần cuối tháng, GDPNow Q2 bị cắt dần 3.8% → 2.8%.\n\n---\n\n## 4. Niềm tin & Tiêu dùng — 🟡 HỖN HỢP\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 09/06 | NFIB Small Business Optimism | 95.3 | 96.0 | ↓ | 🟡 Inline |\n| 12/06 | Michigan Consumer Sentiment | 48.9 | 46.1 | ↑ +4.1pp | 🟢 Tốt |\n| 12/06 | Michigan 1Y Inflation Exp | 4.6% | 4.9% | ↓ | 🟢 Cool |\n| 12/06 | Michigan 5Y Inflation Exp | 3.4% | 3.8% | ↓ | 🟢 Cool |\n| 26/06 | Michigan Consumer Sentiment | 49.5 | 48.9 | ↑ | 🟡 Inline |\n| 26/06 | Michigan 5Y Inflation Exp | 3.3% | 3.4% | ↓ | 🟢 Cool |\n| 30/06 | CB Consumer Confidence | 91.2 | 94.4 | ↑ +0.6pp | 🔴 Yếu |\n\n**Kết luận:** Michigan hồi khỏi đáy (48.9→49.5) và kỳ vọng lạm phát rơi mạnh (5Y về 3.3%) là tín hiệu dovish nhẹ, nhưng mức tuyệt đối vẫn <50 (vùng yếu) và CB Confidence 91.2 hụt dự báo. Mismatch điển hình: sentiment bi quan nhưng Retail Sales +0.9% cho thấy người tiêu dùng vẫn CHI dù không vui.\n\n---\n\n## 5. Nhà ở — 🔴 NGUỘI\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 09/06 | Existing Home Sales | 4.17M | 4.07M | ↑ | 🟡 Inline |\n| 16/06 | Housing Starts (MoM) | -15.4% | — | ↓ | 🔴 Yếu |\n| 17/06 | Pending Home Sales (MoM) | +3.8% | +0.8% | ↑ | 🟢 Tốt |\n| 24/06 | New Home Sales | 580k | 638k | ↓ -7.3% | 🔴 Yếu |\n| 24/06 | Building Permits (MoM) | -0.9% | -0.7% | ↓ | 🔴 Yếu |\n\n**Kết luận:** Cụm nhà ở yếu rõ — Housing Starts sụp -15.4% MoM, New Home Sales -7.3%, Permits âm — phản ứng trực tiếp với lãi suất cao kéo dài (mortgage ~6.8%, 10Y quanh 4.4%). Pending Home Sales +3.8% là điểm sáng lẻ; nhà ở là nhóm chịu \"higher-for-longer\" nặng nhất.\n\n---\n\n## 6. Fed & Lãi suất — 🔴 HAWKISH\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 17/06 | Fed Interest Rate Decision | 3.75% | 3.75% | → | 🟡 Inline (hawkish hold) |\n\n| Chỉ số | Đầu tháng | Cuối tháng | Thay đổi |\n|---|---|---|---|\n| Fed Funds Rate (DFF) | 3.62% | 3.63% | → |\n| 10Y Treasury (DGS10) | 4.45% | 4.38% | ↓ -7bp |\n| 2Y Treasury (DGS2) | 3.98% | 4.10% | ↑ +12bp |\n| 2s10s Spread (T10Y2Y) | +0.42pp | +0.30pp | ↓ flatten -12bp |\n| VIX (VIXCLS) | 15.3 | 16.5 | ↑ +1.2 |\n| HY OAS (BAMLH0A0HYM2) | 2.74% | 2.75% | → |\n| 10Y Breakeven (T10YIE) | 2.40% | 2.24% | ↓ -16bp |\n\n**Kết luận:** Fed giữ 3.75% nhưng dot plot dịch LÊN (median năm nay 3.4%→3.8%, năm 1 3.1%→3.6%) — hawkish hold, bớt kỳ vọng cắt. Đường cong flatten (2Y +12bp vượt 10Y -7bp) khi thị trường price OUT cuts sau NFP/Retail beat; breakeven rơi -16bp cho thấy kỳ vọng lạm phát dài hạn hạ dù hard-data còn nóng.\n\n---\n\n## Sector — Phân bổ danh mục\n\n| Sector | ETF | Ngắn hạn | Dài hạn | RS 1M | RS 3M | vs MA50 | Lý do 1 câu |\n|---|---|---|---|---|---|---|---|\n| Healthcare | XLV | **OW** | Neutral | +14.3 | -2.3 | ↑ | Defensive bid + STRONG_INFLOW (MFI 83), dẫn RS 1M cả thị trường |\n| Financials | XLF | **OW** | Neutral | +10.3 | -0.9 | ↑ | Curve dương + no-landing, breadth broad 92%, MFI 70 inflow mạnh |\n| Industrials | XLI | Neutral | Neutral | +7.6 | -1.6 | ↑ | Cyclical engine on (ISM>54) nhưng rs_slope -3.3 momentum chậm lại |\n| Utilities | XLU | Neutral | Neutral | +6.7 | -12.4 | ↑ | RS 1M hồi nhưng RS 3M tệ nhất, rs_slope -3.2, bid phòng thủ tạm |\n| Cons. Staples | XLP | Neutral | Neutral | +6.4 | -7.8 | ↑ | Defensive refuge nhưng OUTFLOW, không catalyst thematic |\n| Real Estate | XLRE | Neutral | Neutral | +5.4 | -3.4 | ↑ | 10Y giảm nhẹ hỗ trợ, nhưng nhà ở nguội đè, breadth thrust âm |\n| Materials | XLB | Neutral | Neutral | +3.1 | -9.2 | ↑ | Copper +10% nhưng USD +1.3% đè, inflow nhẹ |\n| Cons. Disc. | XLY | Neutral | Neutral | +1.5 | -6.2 | ↓ | Retail mạnh nhưng dưới MA50, rs_slope +1.5 đang cải thiện |\n| Comm. Svc | XLC | **UW** | **UW** | -1.6 | -13.3 | ↓ | Dưới cả MA50/MA200, RS 3M -13, mega-cap chưa hồi |\n| Energy | XLE | **UW** | Neutral | -5.9 | -20.2 | ↓ | WTI -29% 1M sụp, dưới MA50, OUTFLOW, RS 3M tệ nhất |\n| Technology | XLK | **UW** | **OW** | -7.2 | +17.6 | ↑ | AI capex bị thử thách, -8.8% 1M OUTFLOW, nhưng RS 3M vẫn +17 (dài hạn giữ) |\n\n> **Cycle context:** Sahm 0.10 — chưa trigger · 2s10s +0.30pp, normal (116 phiên) · Fed hawkish hold, dot plot dịch LÊN (price out cuts H2) · **Scorecard tháng trước (calls 05, chấm 07-03): hit 3/11 (27%)** — SAI nặng ở XLK bullish (RS -7.2), XLV/XLU/XLRE/XLP bearish (đều dương mạnh, defensive winning), XLF bearish (RS +10.3). Điều chỉnh: chuyển XLV/XLF sang OW, bỏ luận điểm \"XLK độc dẫn\", tôn trọng defensive rotation + curve dương ưu ái financials.\n\n---\n\n## Cross-asset snapshot\n\n| Asset | Cuối tháng | Thay đổi 1M | Signal |\n|---|---|---|---|\n| Gold (GC=F) | $4,186 | -5.6% | 🟡 |\n| Copper (HG=F) | $6.22/lb | -4.1% | 🟡 |\n| WTI Oil (CL=F) | $68.35 | -28.8% | 🔴 |\n| DXY (USD Index) | 100.8 | +1.3% | 🟡 |\n| Bitcoin (BTC) | $61,829 | -2.7% | 🔴 |\n\n> WTI sụp -28.8% 1M là cú lớn nhất — kéo tụt XLE, giảm áp lực lạm phát năng lượng đầu vào (bù cho hard-data nóng). USD +1.3% headwind cho multinationals/Materials.\n\n---\n\n## Luận điểm đầu tư nhóm ngành — dự báo tăng trưởng (từ các quỹ)\n\n_Nguồn: J.P. Morgan · Goldman Sachs · State Street SPDR · Morningstar. Đối chiếu với dự báo rotation engine tháng `2026-08`. Tầng cross-check — KHÔNG trộn vào điểm engine._\n\n### XLK — Technology\n- **Engine dự báo:** `INFLOW_LIKELY` (confidence MED, score +0.63). Đồng thuận quỹ: **Mạnh OW** (net +1.00, 4 OW / 0 UW) → ✅ KHỚP.\n- **Luận điểm tăng trưởng (bull):**\n  - J.P. Morgan: Tỷ trọng lớn nhất; AI broadening, EPS mạnh\n  - Goldman Sachs: Semiconductors — hưởng lợi trực tiếp AI buildout, tăng trưởng lợi nhuận mạnh nhất Q2\n  - State Street SPDR: AI-driven earnings rộng + định giá hấp dẫn sau nhịp chỉnh\n  - Morningstar _[định giá]_: Rẻ nhất so với fair value\n- **Chốt:** Quỹ và dự báo macro→flow CÙNG hướng tăng → độ tin cậy cao.\n\n### XLC — Communication Services\n- **Engine dự báo:** `FORMING` (confidence MED, score +0.10). Đồng thuận quỹ: **Mạnh OW** (net +1.00, 1 OW / 0 UW) → ✅ KHỚP.\n- **Luận điểm tăng trưởng (bull):**\n  - State Street SPDR: Quảng cáo số tăng tốc + AI monetization\n- **Chốt:** Quỹ và dự báo macro→flow CÙNG hướng tăng → độ tin cậy cao.\n\n### XLI — Industrials\n- **Engine dự báo:** `FORMING` (confidence HIGH, score +0.74). Đồng thuận quỹ: **OW** (net +0.50, 3 OW / 1 UW) → ✅ KHỚP.\n- **Luận điểm tăng trưởng (bull):**\n  - J.P. Morgan: Theme 'power'/AI infra bổ trợ Tech\n  - Goldman Sachs: Tech hardware/industrials hưởng earnings boost từ AI infra\n  - State Street SPDR: CapEx AI infra, quốc phòng, chính sách tài khoá pro-CapEx\n- **⚠️ Rủi ro / phản biện (bear):**\n  - Morningstar _[định giá]_: Tăng ~17% YTD nhờ AI-buildout\n- **Chốt:** Quỹ và dự báo macro→flow CÙNG hướng tăng → độ tin cậy cao.\n\n### XLY — Consumer Discretionary\n- **Engine dự báo:** `FORMING` (confidence MED, score +0.91). Đồng thuận quỹ: **Mạnh UW** (net -1.00, 0 OW / 1 UW) → ⚠️ LỆCH.\n- **⚠️ Rủi ro / phản biện (bear):**\n  - State Street SPDR: Thu nhập thực yếu, tiết kiệm thấp ép cầu\n- **Chốt:** Engine dự báo tăng nhưng quỹ thận trọng/ngược → soi kỹ trước khi nâng tỷ trọng.\n\n### Quỹ bullish nhưng engine CHƯA dự báo tăng (theo dõi sớm)\n- **XLU Utilities**: quỹ Mạnh OW (net +1.00) vs engine `NEUTRAL` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n- **XLE Energy**: quỹ Mạnh OW (net +1.00) vs engine `OUTFLOW_LIKELY` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n- **XLF Financials**: quỹ Mạnh OW (net +0.67) vs engine `NEUTRAL` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n- **XLV Healthcare**: quỹ OW (net +0.50) vs engine `NEUTRAL` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n\n_Sinh tất định bởi `scripts/build_fund_consensus.py` từ `data/fund_views_latest.json` + `data/monthly_rotation_forecast_latest.json`._\n\n---\n*Coverage: 22 daily reports (2026-06); FRED snapshot 2026-06-30; sectors_lite.json + cross_asset_lite.json (fetched 2026-07-03); scorecard 2026-07-03.*\n", "rotation_target": "2026-07", "rotation": [{"ticker": "XLI", "name": "Industrials", "score": 0.877, "phase": "INFLOW_LIKELY"}, {"ticker": "XLF", "name": "Financials", "score": 0.739, "phase": "INFLOW_LIKELY"}, {"ticker": "XLY", "name": "Consumer Discretionary", "score": 0.715, "phase": "INFLOW_LIKELY"}, {"ticker": "XLK", "name": "Technology", "score": 0.385, "phase": "INFLOW_LIKELY"}, {"ticker": "XLC", "name": "Communication Services", "score": 0.03, "phase": "FORMING"}, {"ticker": "XLB", "name": "Materials", "score": 0.126, "phase": "NEUTRAL"}, {"ticker": "XLRE", "name": "Real Estate", "score": -0.324, "phase": "NEUTRAL"}, {"ticker": "XLP", "name": "Consumer Staples", "score": -0.385, "phase": "NEUTRAL"}, {"ticker": "XLU", "name": "Utilities", "score": -0.261, "phase": "OUTFLOW_LIKELY"}, {"ticker": "XLV", "name": "Healthcare", "score": -0.579, "phase": "AVOID"}, {"ticker": "XLE", "name": "Energy", "score": -1.764, "phase": "AVOID"}], "rot_colors": ["#4ade80", "#4ade80", "#4ade80", "#4ade80", "#2dd4bf", "#8b96a3", "#8b96a3", "#8b96a3", "#fbbf24", "#f87171", "#f87171"]}</script>
-<script>
-  const P = JSON.parse(document.getElementById('payload').textContent);
-  const fm = P.fm || {};
-
-  document.getElementById('hero-title').textContent = 'Báo cáo Vĩ mô Mỹ — Tháng ' + (P.month||'');
-  document.getElementById('hero-sub').textContent = 'US Macro Monthly · chia sẻ chỉ-đọc';
-  document.getElementById('hero-takeaway').textContent = fm.key_takeaway || '';
-
-  const BLABEL = {regime:'Chu kỳ', fed_stance:'Fed', economic_health:'Sức khoẻ KT'};
-  const badges = document.getElementById('hero-badges');
-  ['regime','fed_stance','economic_health'].forEach(k=>{
-    if(!fm[k]) return;
-    const d=document.createElement('div'); d.className='badge';
-    d.innerHTML='<b>'+BLABEL[k]+'</b>'+fm[k]; badges.appendChild(d);
-  });
-
-  // Rotation chart
-  if(P.rotation && P.rotation.length){
-    document.getElementById('rot-title').textContent =
-      'Dự báo luân chuyển dòng tiền — tháng ' + P.rotation_target + ' (điểm engine)';
-    const labels = P.rotation.map(r=>r.ticker+' · '+r.name);
-    const scores = P.rotation.map(r=>r.score);
-    new Chart(document.getElementById('rotChart'), {
-      type:'bar',
-      data:{labels, datasets:[{data:scores, backgroundColor:P.rot_colors, borderRadius:5}]},
-      options:{indexAxis:'y', plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>' score '+c.raw.toFixed(2)+'  ('+P.rotation[c.dataIndex].phase+')'}}},
-        scales:{x:{grid:{color:'#1e2b45'},ticks:{color:'#8ba0bd'}},
-                y:{grid:{display:false},ticks:{color:'#e5edf7',font:{size:12}}}}}
-    });
-    const PC={INFLOW_LIKELY:['#4ade80','Nhận tiền'],FORMING:['#2dd4bf','Đang hình thành'],
-      NEUTRAL:['#8b96a3','Trung tính'],OUTFLOW_LIKELY:['#fbbf24','Rời tiền'],AVOID:['#f87171','Tránh']};
-    const lg=document.getElementById('rot-legend');
-    Object.values(PC).forEach(([c,t])=>{const s=document.createElement('span');
-      s.innerHTML='<span class="dot" style="background:'+c+'"></span>'+t; lg.appendChild(s);});
-  } else {
-    document.getElementById('rot-card').style.display='none';
+  /* Chart card header with toggle */
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .clickable-label { cursor: pointer; }
+  .clickable-label:hover { color: var(--blue); }
+  .view-toggle {
+    display: flex;
+    gap: 2px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px;
+  }
+  .view-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+  }
+  .view-btn:hover { color: var(--text); }
+  .view-btn.active {
+    background: var(--blue);
+    color: white;
   }
 
-  // Report body
-  marked.setOptions({gfm:true, breaks:false});
-  document.getElementById('report').innerHTML = marked.parse(P.body||'');
+  /* Today panel: "MỚI" badge cho chỉ số công bố hôm nay */
+  .new-badge { display:inline-block; background:#16a34a; color:#fff; font-size:9px; font-weight:700;
+    padding:1px 5px; border-radius:4px; margin:0 4px; vertical-align:middle; letter-spacing:.3px; }
+  /* Today panel: thanh chọn ngày công bố */
+  .today-controls { display:flex; align-items:center; gap:8px; margin: 4px 0 14px; }
+  .today-hint { color:var(--muted); font-size:13px; }
+  .date-select { background:var(--bg); color:var(--text); border:1px solid var(--border);
+    border-radius:6px; padding:5px 10px; font-family:inherit; font-size:13px; cursor:pointer; }
+  .date-select:hover { border-color:var(--blue); }
 
-  document.getElementById('foot').textContent =
-    'Sinh tự động từ hệ thống US Macro Tracking · báo cáo tĩnh tháng ' + P.month + '. Không phải khuyến nghị đầu tư.';
+  /* Sector heatmap */
+  .sector-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 900px) { .sector-grid { grid-template-columns: 1fr; } }
+  .sector-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-feature-settings: "tnum";
+  }
+  .sector-table th {
+    color: var(--muted);
+    text-align: right;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .sector-table th:first-child, .sector-table td:first-child { text-align: left; }
+  .sector-table td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--border);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .sector-table tr.clickable:hover td { background: #1e2632; }
+  .sector-table .ticker {
+    display: inline-block;
+    background: var(--border);
+    color: var(--text);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 6px;
+    min-width: 32px;
+    text-align: center;
+  }
+  .ret-cell {
+    border-radius: 4px;
+    padding: 3px 6px;
+    display: inline-block;
+    min-width: 56px;
+  }
+  /* ── Sub-industry momentum drill-down (tab Tháng) ── */
+  .sector-momentum { margin-top: 18px; }
+  .mom-head {
+    font-size: 12px; color: var(--muted); margin-bottom: 10px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .mom-head strong { color: var(--text); }
+  .mom-back {
+    cursor: pointer; color: var(--blue); font-weight: 600;
+  }
+  .mom-back:hover { text-decoration: underline; }
+  .mom-list { display: flex; flex-direction: column; gap: 2px; }
+  .mom-click { cursor: pointer; padding: 4px 6px; border-radius: 6px; transition: background 0.12s; }
+  .mom-click:hover { background: #1e2632; }
+  .mom-group { padding: 4px 6px; }
+  .mom-row { display: flex; align-items: center; gap: 10px; }
+  .mom-label {
+    flex: 0 0 210px; font-size: 12px; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .mom-track {
+    position: relative; flex: 1 1 auto; height: 14px;
+    background: #161c26; border-radius: 3px; min-width: 120px;
+  }
+  .mom-mid {
+    position: absolute; left: 50%; top: -2px; bottom: -2px;
+    width: 1px; background: rgba(255,255,255,0.25);
+  }
+  .mom-fill {
+    position: absolute; top: 0; bottom: 0; border-radius: 3px;
+  }
+  .mom-fill.pos { background: #2e9e5b; }
+  .mom-fill.neg { background: #d0424a; }
+  .mom-val {
+    flex: 0 0 78px; text-align: right; font-size: 12px;
+    font-weight: 600; font-feature-settings: "tnum";
+  }
+  .mom-val.pos { color: #4ecb7d; }
+  .mom-val.neg { color: #ee6a70; }
+  .mom-sub-note { font-size: 10px; color: var(--muted); margin: 1px 0 0 6px; }
+  .mom-chips { margin: 3px 0 6px 220px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .mom-chip {
+    font-size: 10px; padding: 1px 6px; border-radius: 4px;
+    font-feature-settings: "tnum"; border: 1px solid var(--border);
+  }
+  .mom-chip.pos { color: #4ecb7d; }
+  .mom-chip.neg { color: #ee6a70; }
+  .mom-foot { font-size: 10px; color: var(--muted); margin-top: 10px; font-style: italic; }
+  .mom-toggle { font-size: 11px; color: var(--muted); margin: 2px 0 10px; }
+  .mom-tog {
+    cursor: pointer; padding: 2px 9px; border-radius: 999px; margin-left: 4px;
+    border: 1px solid var(--border); color: var(--muted);
+  }
+  .mom-tog:hover { color: var(--text); }
+  .mom-tog.on { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
+  /* Heat colors — green for positive, red for negative, scaled by magnitude */
+  .heat-pos-3 { background: rgba(74, 222, 128, 0.40); color: #d1fae5; }
+  .heat-pos-2 { background: rgba(74, 222, 128, 0.25); color: #d1fae5; }
+  .heat-pos-1 { background: rgba(74, 222, 128, 0.12); color: #bbf7d0; }
+  .heat-neg-1 { background: rgba(248, 113, 113, 0.12); color: #fecaca; }
+  .heat-neg-2 { background: rgba(248, 113, 113, 0.25); color: #fecaca; }
+  .heat-neg-3 { background: rgba(248, 113, 113, 0.40); color: #fee2e2; }
+  .heat-zero { color: var(--muted); }
+
+  .sector-rs-chart-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .rs-chart-box { position: relative; height: 280px; margin-top: 8px; }
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 4px;
+    margin-top: 10px;
+    font-size: 11px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .legend-item.hidden { opacity: 0.35; }
+
+  /* Calendar */
+  .cal-day {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+  }
+  .cal-day-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .cal-date {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .cal-weekday { color: var(--muted); font-size: 11px; }
+  .cal-events { display: flex; flex-direction: column; gap: 4px; }
+  .cal-event {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 13px;
+  }
+  .cal-event.earnings .cal-tag { background: rgba(96, 165, 250, 0.18); color: #93c5fd; }
+  .cal-event.macro .cal-tag { background: rgba(251, 191, 36, 0.18); color: #fcd34d; }
+  .cal-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    min-width: 70px;
+    text-align: center;
+  }
+  .cal-sector { color: var(--muted); font-size: 11px; }
+  .cal-est { color: var(--muted); font-size: 10px; font-style: italic; margin-left: 4px; }
+
+  /* End-of-month reminder banner */
+  .reminder-banner {
+    background: linear-gradient(90deg, rgba(251,191,36,0.15), rgba(251,191,36,0.05));
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 13.5px;
+    color: #fcd34d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .reminder-banner code {
+    background: rgba(0,0,0,0.5);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: #fde68a;
+    font-size: 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .reminder-banner strong { color: #fef3c7; }
+
+  /* Monthly full charts section (only visible in Tháng tab) */
+  .monthly-full-charts {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .monthly-full-charts h4 {
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 16px 0 10px;
+    font-weight: 600;
+  }
+
+  /* Insights section */
+  .insights-card {
+    background: linear-gradient(180deg, #1a2028 0%, #161c25 100%);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 20px 24px;
+  }
+  .report-datelabel {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+  .insights-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .insights-badge {
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge-risk-on { background: rgba(74, 222, 128, 0.18); color: #86efac; }
+  .badge-risk-off { background: rgba(248, 113, 113, 0.20); color: #fecaca; }
+  .badge-neutral { background: var(--border); color: var(--muted); }
+  .badge-hawkish { background: rgba(248, 113, 113, 0.20); color: #fecaca; }
+  .badge-dovish { background: rgba(74, 222, 128, 0.18); color: #86efac; }
+  .badge-stagflation { background: rgba(251, 191, 36, 0.22); color: #fcd34d; }
+  .badge-warn { background: rgba(251, 191, 36, 0.22); color: #fcd34d; }
+  .badge-expansion { background: rgba(74, 222, 128, 0.18); color: #86efac; }
+  .badge-slowdown { background: rgba(251, 191, 36, 0.22); color: #fcd34d; }
+  .badge-recession { background: rgba(248, 113, 113, 0.25); color: #fecaca; }
+  .badge-recovery { background: rgba(96, 165, 250, 0.20); color: #93c5fd; }
+  .key-takeaway {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    padding: 10px 14px;
+    background: rgba(96, 165, 250, 0.08);
+    border-left: 2px solid var(--blue);
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  /* Kết luận tự sinh từ dữ liệu (tất định) */
+  .auto-concl { margin-bottom: 16px; }
+  .auto-concl-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .auto-concl ul { margin: 0; padding-left: 18px; }
+  .auto-concl li { font-size: 13px; line-height: 1.75; color: var(--text); }
+  /* Cảnh báo & catalyst — mục riêng, luôn hiện */
+  .catalyst-block {
+    margin: 4px 0 14px;
+    padding: 12px 16px;
+    background: rgba(251, 191, 36, 0.07);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    border-left: 3px solid #fbbf24;
+    border-radius: 6px;
+  }
+  .catalyst-block h2, .catalyst-block h3 { margin: 0 0 6px; font-size: 14px; color: #fcd34d; }
+  .catalyst-block ul { margin: 6px 0; padding-left: 18px; }
+  .catalyst-block p, .catalyst-block li { font-size: 13px; line-height: 1.65; }
+  /* Phân tích chi tiết thu gọn */
+  details.analysis-details { margin: 4px 0 12px; border-top: 1px solid var(--border); padding-top: 10px; }
+  details.analysis-details > summary { cursor: pointer; color: var(--muted); font-size: 13px; list-style: none; user-select: none; }
+  details.analysis-details > summary::-webkit-details-marker { display: none; }
+  details.analysis-details > summary:hover { color: var(--text); }
+  details.analysis-details[open] > summary { color: var(--text); margin-bottom: 8px; }
+  /* Stat badges dưới mỗi biểu đồ */
+  .stat-context { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 8px; }
+  .stat-context .sc-value { font-size: 13px; font-weight: 700; color: var(--text); margin-right: 4px; }
+  .sc-badge { font-size: 11px; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .sc-badge.sc-high { background: rgba(251,191,36,0.18); color: #fcd34d; }
+  .sc-badge.sc-low { background: rgba(96,165,250,0.16); color: #93c5fd; }
+  .sc-badge.sc-up { background: rgba(74,222,128,0.15); color: #86efac; }
+  .sc-badge.sc-down { background: rgba(251,146,60,0.18); color: #fdba74; }
+  .sc-badge.sc-neutral { background: var(--border); color: var(--muted); }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .markdown-body {
+    color: var(--text);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+    color: var(--text);
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .markdown-body h1 { font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .markdown-body h2 { font-size: 16px; color: var(--blue); }
+  .markdown-body h3 { font-size: 14px; color: var(--text); }
+  .markdown-body p { margin: 8px 0; }
+  .markdown-body strong { color: var(--text); }
+  .markdown-body em { color: var(--amber); font-style: normal; }
+  .markdown-body ul, .markdown-body ol { margin: 8px 0; padding-left: 22px; }
+  .markdown-body li { margin: 4px 0; }
+  .markdown-body code {
+    background: var(--bg);
+    color: var(--blue);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+  .markdown-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 12.5px;
+  }
+  .markdown-body th, .markdown-body td {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .markdown-body th { background: var(--bg); color: var(--muted); font-weight: 600; }
+  .markdown-body hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  .markdown-body blockquote {
+    border-left: 3px solid var(--amber);
+    padding: 4px 12px;
+    margin: 10px 0;
+    color: var(--muted);
+    background: rgba(251, 191, 36, 0.06);
+  }
+  .report-meta {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px 28px;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: var(--text);
+    padding-right: 30px;
+  }
+  .modal .modal-meta {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .modal-section {
+    margin-bottom: 14px;
+  }
+  .modal-section .label {
+    color: var(--blue);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .modal-section .body { font-size: 13px; line-height: 1.6; color: var(--text); }
+  .modal-section.up .label { color: var(--green); }
+  .modal-section.down .label { color: var(--red); }
+  .modal-empty {
+    color: var(--muted);
+    padding: 20px 0;
+    font-style: italic;
+    font-size: 13px;
+  }
+</style>
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<header>
+  <h1>Vĩ mô Mỹ — Dashboard</h1>
+  <div class="meta" id="last-updated">—</div>
+</header>
+
+<div class="container">
+
+<div class="report-search">
+  <div class="report-search-box">
+    <span class="rs-icon">🔍</span>
+    <input type="text" id="report-search-input" placeholder="Tìm báo cáo ngày (vd: 2026-06-10, hawkish, CPI, lạm phát...)" autocomplete="off">
+    <button id="report-search-clear" title="Xoá" style="display:none;">×</button>
+  </div>
+  <div class="report-search-results" id="report-search-results"></div>
+</div>
+
+<div id="monthly-reminder"></div>
+
+<section>
+  <h2>Insights & Kết luận</h2>
+  <div id="insights-section">
+    <div class="insights-card"><div class="empty">Chưa có báo cáo. Chạy <code>/daily-macro</code> để sinh báo cáo phân tích.</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Chỉ số công bố trong ngày</h2>
+  <div id="today-releases" class="card">
+    <div class="empty">Đang tải...</div>
+  </div>
+</section>
+
+<section>
+  <h2>Tóm tắt nhanh (snapshot mới nhất)</h2>
+  <div id="kpi-grid" class="grid grid-4"></div>
+</section>
+
+<section>
+  <h2>Xu hướng chỉ số công bố theo ngày <span style="font-size:13px;font-weight:400;color:var(--muted)">(chọn ngày · lọc theo danh sách bạn theo dõi)</span></h2>
+  <div id="release-trends" class="grid grid-3">
+    <div class="empty">Đang tải...</div>
+  </div>
+</section>
+
+<section>
+  <h2>Theo dõi Fed vùng <span style="font-size:13px;font-weight:400;color:var(--muted)">(Chicago · New York — chỉ số & nhận định định lượng, tự cập nhật)</span></h2>
+  <div id="fed-regional" class="grid grid-3">
+    <div class="empty">Đang tải...</div>
+  </div>
+</section>
+
+<section>
+  <h2>Market Context — Cross-Asset</h2>
+  <div id="cross-asset-section">
+    <div class="empty">Đang tải cross-asset data...</div>
+  </div>
+</section>
+
+<section>
+  <h2>Sector Rotation — 11 GICS Sectors (SPDR ETFs)</h2>
+  <div id="sectors-section">
+    <div class="empty">Đang tải sector data...</div>
+  </div>
+</section>
+
+<section>
+  <h2>Catalysts tới — 21 ngày</h2>
+  <div id="calendar-section">
+    <div class="empty">Đang tải calendar...</div>
+  </div>
+</section>
+
+</div>
+
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal-content">
+    <button class="modal-close" id="modal-close" aria-label="Đóng">×</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script src="./indicators.js"></script>
+<script src="./data.js"></script>
+<script>
+const D = window.MACRO_DATA || {};
+const INDICATORS = window.INDICATORS || { byFredId: {}, byNamePattern: [] };
+const fmt = (n, d = 2) => (n == null || isNaN(n)) ? "—" : Number(n).toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d });
+const fmtPct = (n, d = 2) => n == null ? "—" : (n >= 0 ? "+" : "") + fmt(n, d) + "%";
+
+// === Modal logic ===
+function lookupIndicator({ fredId, name }) {
+  if (fredId && INDICATORS.byFredId[fredId]) {
+    return { ...INDICATORS.byFredId[fredId], _fredId: fredId };
+  }
+  if (name) {
+    for (const p of INDICATORS.byNamePattern) {
+      if (p.match.test(name)) {
+        if (p.useFredId && INDICATORS.byFredId[p.useFredId]) {
+          const base = INDICATORS.byFredId[p.useFredId];
+          const merged = p.info_override ? { ...base, ...p.info_override } : base;
+          return { ...merged, _fredId: p.useFredId };
+        }
+        if (p.info) return { ...p.info };
+      }
+    }
+  }
+  return null;
+}
+
+function openModal({ fredId, name, latest, change, releaseData }) {
+  const info = lookupIndicator({ fredId, name });
+  const body = document.getElementById("modal-body");
+  if (!info) {
+    // Still try to show release data + investing.com link if available
+    const url = releaseData && releaseData.event_url;
+    body.innerHTML = `
+      <h3>${name || fredId || "Chỉ số"}</h3>
+      ${releaseData ? renderReleaseInfo(releaseData) : ""}
+      ${url ? `<div class="modal-section"><a class="report-link" href="${url}" target="_blank" rel="noopener">Xem trên investing.com →</a></div>` : ""}
+      <div class="modal-empty">Chưa có mô tả tiếng Việt cho chỉ số này. Bạn có thể bổ sung trong file <code>dashboard/indicators.js</code>.</div>`;
+    document.getElementById("modal-overlay").classList.add("open");
+    return;
+  }
+
+  const metaParts = [];
+  if (info.unit) metaParts.push(info.unit);
+  if (info.freq) metaParts.push(info.freq);
+  if (info.source) metaParts.push("Nguồn: " + info.source);
+  if (info._fredId) metaParts.push("FRED: " + info._fredId);
+
+  let valueLine = "";
+  if (latest && latest.value != null) {
+    const deltaTxt = change != null ? ` (${change >= 0 ? "+" : ""}${fmt(change, 2)}%)` : "";
+    valueLine = `<div class="modal-section"><div class="label">Giá trị mới nhất</div>
+      <div class="body"><strong>${fmt(latest.value, 2)}</strong>${deltaTxt} · <span style="color: var(--muted)">${latest.date}</span></div></div>`;
+  }
+
+  // Release-specific info (when coming from daily releases table)
+  const releaseInfoHtml = releaseData ? renderReleaseInfo(releaseData) : "";
+  const investingLinkHtml = releaseData && releaseData.event_url
+    ? `<div class="modal-section"><a class="report-link" href="${releaseData.event_url}" target="_blank" rel="noopener">Xem chi tiết trên investing.com →</a></div>`
+    : "";
+
+  // Trend chart section if FRED ID matched and we have history
+  const hasHistory = info._fredId && D.history && D.history[info._fredId] && (D.history[info._fredId].history || []).length > 0;
+  // Default the chart to the metric investing.com headlines (YoY for inflation,
+  // Δ MoM for NFP, level for rates/GDP-rate…) so the value matches the release.
+  const modalDefaultView = (hasHistory && DEFAULT_VIEW[info._fredId]) || "level";
+  const trendHtml = hasHistory ? `
+    <div class="modal-section">
+      <div class="label">Xu hướng</div>
+      <div class="view-toggle" data-modal-fred="${info._fredId}" style="margin: 6px 0 8px; display: inline-flex;">
+        ${buildToggleButtons(info._fredId, modalDefaultView)}
+      </div>
+      <div class="chart-box" style="height: 180px;"><canvas id="modal-trend-chart"></canvas></div>
+    </div>` : "";
+
+  body.innerHTML = `
+    <h3>${info.name}</h3>
+    <div class="modal-meta">${metaParts.join(" · ")}</div>
+    ${releaseInfoHtml}
+    ${investingLinkHtml}
+    ${valueLine}
+    ${trendHtml}
+    ${info.what ? `<div class="modal-section"><div class="label">Đo cái gì?</div><div class="body">${info.what}</div></div>` : ""}
+    ${info.why ? `<div class="modal-section"><div class="label">Tại sao quan trọng?</div><div class="body">${info.why}</div></div>` : ""}
+    ${info.high_means ? `<div class="modal-section up"><div class="label">↑ Cao hơn / Beat nghĩa là</div><div class="body">${info.high_means}</div></div>` : ""}
+    ${info.low_means ? `<div class="modal-section down"><div class="label">↓ Thấp hơn / Miss nghĩa là</div><div class="body">${info.low_means}</div></div>` : ""}
+    ${info.watch ? `<div class="modal-section"><div class="label">Cần theo dõi</div><div class="body">${info.watch}</div></div>` : ""}
+  `;
+  document.getElementById("modal-overlay").classList.add("open");
+
+  // Render trend chart + bind toggle
+  if (hasHistory) {
+    renderModalTrendChart(info._fredId, modalDefaultView);
+    body.querySelectorAll(".view-toggle[data-modal-fred] .view-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        body.querySelectorAll(".view-toggle[data-modal-fred] .view-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderModalTrendChart(info._fredId, btn.dataset.view);
+      });
+    });
+  }
+}
+
+function renderReleaseInfo(rd) {
+  // Pretty render actual / forecast / previous as a small comparison
+  const surprise = (() => {
+    const a = parseFloat(String(rd.actual ?? "").replace(/[%,KMB$]/g, ""));
+    const f = parseFloat(String(rd.forecast ?? "").replace(/[%,KMB$]/g, ""));
+    if (isNaN(a) || isNaN(f)) return null;
+    if (Math.abs(a - f) < Math.max(0.05, Math.abs(f) * 0.02)) return { lbl: "in-line", cls: "" };
+    return a > f ? { lbl: "beat", cls: "up" } : { lbl: "miss", cls: "down" };
+  })();
+  return `<div class="modal-section">
+    <div class="label">Công bố hôm nay</div>
+    <div class="body" style="font-feature-settings: 'tnum';">
+      <strong>Actual: ${rd.actual ?? "—"}</strong> · Forecast: ${rd.forecast ?? "—"} · Previous: ${rd.previous ?? "—"}
+      ${surprise ? ` · <span class="${surprise.cls === 'up' ? 'surprise-beat' : (surprise.cls === 'down' ? 'surprise-miss' : 'surprise-inline')}">${surprise.lbl}</span>` : ""}
+    </div>
+  </div>`;
+}
+
+let modalChart = null;
+function renderModalTrendChart(fredId, view) {
+  const s = (D.history || {})[fredId];
+  if (!s || !s.history) return;
+  const t = transformSeries(s.history, view);
+  const { labels, values } = tailWindow(t.labels, t.values);
+
+  const datasets = [{
+    data: values,
+    borderColor: "#60a5fa",
+    backgroundColor: "rgba(96,165,250,0.1)",
+    fill: true,
+    tension: 0.25,
+    pointRadius: values.length <= 3 ? 4 : 0,  // chuỗi thưa (chỉ số mới tích lũy) → hiện chấm
+    borderWidth: 1.5,
+    spanGaps: true,
+  }];
+  getReferenceLines(fredId, view).forEach(ref => {
+    datasets.push({
+      data: labels.map(() => ref.value),
+      borderColor: ref.color,
+      borderDash: [4, 4],
+      borderWidth: 1,
+      pointRadius: 0,
+      fill: false,
+      label: ref.label,
+    });
+  });
+
+  const ctx = document.getElementById("modal-trend-chart");
+  if (!ctx) return;
+  if (modalChart) modalChart.destroy();
+  modalChart = new Chart(ctx, {
+    type: "line",
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: "index", intersect: false,
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 0) {
+                const v = ctx.parsed.y;
+                if (v == null) return "—";
+                return fmt(v, 2) + " " + t.unitSuffix;
+              }
+              return ctx.dataset.label;
+            },
+          },
+        },
+      },
+      scales: {
+        x: { ticks: { color: "#8b96a3", maxTicksLimit: 6, font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { color: "#8b96a3", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.05)" } },
+      },
+    },
+  });
+}
+
+function closeModal() {
+  document.getElementById("modal-overlay").classList.remove("open");
+}
+
+document.getElementById("modal-close").addEventListener("click", closeModal);
+document.getElementById("modal-overlay").addEventListener("click", (e) => {
+  if (e.target.id === "modal-overlay") closeModal();
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+
+document.getElementById("last-updated").textContent =
+  D.last_updated ? "Cập nhật: " + new Date(D.last_updated).toLocaleString("vi-VN") : "Chưa có dữ liệu";
+
+// === End-of-month reminder banner ===
+(function renderMonthlyReminder() {
+  const el = document.getElementById("monthly-reminder");
+  if (!el) return;
+  const today = new Date();
+  const day = today.getDate();
+  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  // Show in last 3 days of month OR first 3 days of new month
+  const inWindow = day >= (lastDayOfMonth - 2) || day <= 3;
+  if (!inWindow) return;
+
+  // Target month: if early days, target = previous month; else = current month
+  let year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  if (day <= 3) {
+    month -= 1;
+    if (month === 0) { month = 12; year -= 1; }
+  }
+  const targetMonth = `${year}-${String(month).padStart(2, "0")}`;
+
+  // Check if monthly report already exists
+  const existing = (D.monthly_reports || []).find(r =>
+    r.month === targetMonth || (r.file && r.file.startsWith(targetMonth))
+  );
+  if (existing) return;
+
+  const inEarlyDays = day <= 3;
+  const msg = inEarlyDays
+    ? `Bạn vừa bước sang tháng mới. Chưa có báo cáo tổng hợp cho tháng <strong>${targetMonth}</strong>.`
+    : `Đã cuối tháng. Tháng <strong>${targetMonth}</strong> chưa có báo cáo tổng hợp.`;
+
+  el.innerHTML = `
+    <div class="reminder-banner">
+      📅 ${msg}
+      Chạy <code>/monthly-macro ${targetMonth}</code> để tổng hợp đầy đủ chỉ số + sector calls 11 GICS + bảng xu hướng.
+    </div>
+  `;
+})();
+
+// === Insights & Kết luận ===
+window.badgesForReport = function(report) {
+  if (!report) return "";
+  const badges = [];
+  if (report.regime_signal) {
+    const cls = "badge-" + report.regime_signal.replace(/[^a-z-]/gi, "").toLowerCase();
+    badges.push(`<span class="insights-badge ${cls}">${report.regime_signal}</span>`);
+  }
+  if (report.regime) {
+    const cls = "badge-" + report.regime.replace(/[^a-z-]/gi, "").toLowerCase();
+    badges.push(`<span class="insights-badge ${cls}">Regime: ${report.regime}</span>`);
+  }
+  if (report.fed_stance) {
+    const cls = "badge-" + report.fed_stance.replace(/[^a-z-]/gi, "").toLowerCase();
+    badges.push(`<span class="insights-badge ${cls}">Fed: ${report.fed_stance}</span>`);
+  }
+  if (report.surprise_count != null && Number(report.surprise_count) > 0) {
+    badges.push(`<span class="insights-badge badge-neutral">${report.surprise_count} surprises</span>`);
+  }
+  return badges.join(" ");
+};
+
+window.currentDailyReport = D.latest_daily;
+window.currentWeeklyReport = D.latest_weekly;
+window.currentMonthlyReport = D.latest_monthly;
+let monthlyChartsRendered = false;
+
+const REPORT_KIND_META = {
+  daily:   { label: "📅 Báo cáo ngày",  dir: "daily",   date: r => r.date },
+  weekly:  { label: "📅 Báo cáo tuần",  dir: "weekly",  date: r => r.date },
+  monthly: { label: "📅 Báo cáo tháng", dir: "monthly", date: r => r.month || r.date },
+};
+function reportRef(kind) {
+  return kind === "daily" ? window.currentDailyReport
+       : kind === "weekly" ? window.currentWeeklyReport
+       : window.currentMonthlyReport;
+}
+
+window.showReportInDashboard = function(report, kind) {
+  if (!report) return;
+  const km = REPORT_KIND_META[kind] || REPORT_KIND_META.daily;
+  const dateEl = document.getElementById("insights-datelabel");
+  if (dateEl) dateEl.textContent = `${km.label} · ${km.date(report)}`;
+  const headerEl = document.getElementById("insights-header");
+  const takeawayEl = document.getElementById("insights-takeaway");
+  const bodyEl = document.getElementById("insights-body");
+  const metaEl = document.getElementById("insights-meta");
+  const fullChartsEl = document.getElementById("monthly-full-charts");
+
+  if (headerEl) headerEl.innerHTML = window.badgesForReport(report);
+  if (takeawayEl) takeawayEl.innerHTML = report.key_takeaway ? `<div class="key-takeaway">${report.key_takeaway}</div>` : "";
+
+  // Điểm chính từ dữ liệu (tự tính) — chỉ cho daily
+  const conclEl = document.getElementById("insights-conclusions");
+  if (conclEl) {
+    const bullets = kind === "daily" ? autoConclusionBullets(report.date) : [];
+    conclEl.innerHTML = bullets.length
+      ? `<div class="auto-concl"><div class="auto-concl-title">📊 Điểm chính từ dữ liệu (tự tính theo lịch sử)</div><ul>${bullets.join("")}</ul></div>`
+      : "";
+  }
+
+  // Tách phần "Cảnh báo & catalyst sắp tới" thành mục riêng (luôn hiện, ngoài <details>)
+  let bodyMd = report.body || "";
+  let catalystMd = "";
+  const cm = bodyMd.match(/\n#{1,3}\s*Cảnh báo[^\n]*/i);
+  if (cm) {
+    catalystMd = bodyMd.slice(cm.index);
+    bodyMd = bodyMd.slice(0, cm.index);
+  }
+  const catEl = document.getElementById("insights-catalysts");
+  if (catEl) {
+    catEl.innerHTML = (catalystMd && window.marked)
+      ? `<div class="catalyst-block markdown-body">${marked.parse(catalystMd)}</div>`
+      : "";
+  }
+
+  // Render markdown body (đã bỏ phần catalyst)
+  if (bodyEl) {
+    if (bodyMd && window.marked) {
+      try {
+        bodyEl.innerHTML = marked.parse(bodyMd);
+      } catch (e) {
+        bodyEl.textContent = bodyMd;
+      }
+    } else if (bodyMd) {
+      bodyEl.innerText = bodyMd;
+    } else {
+      bodyEl.innerHTML = `<div class="empty">Báo cáo này chưa có nội dung.</div>`;
+    }
+  }
+
+  if (metaEl) metaEl.textContent = `Nguồn: data/${km.dir}/${report.file}`;
+
+  // Show/hide full FRED charts for monthly tab
+  if (fullChartsEl) {
+    if (kind === "monthly") {
+      fullChartsEl.style.display = "";
+      if (!monthlyChartsRendered) {
+        renderMonthlyFullCharts(fullChartsEl);
+        monthlyChartsRendered = true;
+      }
+    } else {
+      fullChartsEl.style.display = "none";
+    }
+  }
+
+  // Sub-industry momentum drill-down (chỉ tab Tháng): click sector → xem động lực bên trong.
+  const momentumEl = document.getElementById("monthly-momentum");
+  if (momentumEl) {
+    if (kind === "monthly") {
+      momentumEl.style.display = "";
+      renderSectorMomentum(momentumEl);
+    } else {
+      momentumEl.style.display = "none";
+    }
+  }
+
+  // Báo cáo THÁNG là góc nhìn dài hạn → ẩn các section mang tính NGÀY:
+  // chỉ số công bố trong ngày, panel xu hướng theo ngày, và catalyst 21 ngày tới.
+  // Daily/Tuần thì hiện lại bình thường.
+  const dailyOnly = ["today-releases", "release-trends", "calendar-section"];
+  dailyOnly.forEach(id => {
+    const node = document.getElementById(id);
+    const sec = node && node.closest("section");
+    if (sec) sec.style.display = (kind === "monthly") ? "none" : "";
+  });
+};
+
+window.initInsights = function() {
+  const el = document.getElementById("insights-section");
+
+  // Tab cho từng loại báo cáo có sẵn: ngày / tuần / tháng
+  const TAB_LABEL = {
+    daily:   r => `Ngày — ${r.date}`,
+    weekly:  r => `Tuần — ${r.date}`,
+    monthly: r => `Tháng — ${r.month || r.date}`,
+  };
+  const available = ["daily", "weekly", "monthly"].filter(k => reportRef(k));
+  if (!available.length) return; // keep placeholder
+
+  const tabsHtml = available.length >= 2 ? `
+      <div class="tabs">
+        ${available.map((k, i) => `<button class="tab${i === 0 ? " active" : ""}" data-tab="${k}">${TAB_LABEL[k](reportRef(k))}</button>`).join("")}
+      </div>` : "";
+
+  const initialKind = available[0];
+  const initial = reportRef(initialKind);
+
+  el.innerHTML = `
+    <div class="insights-card">
+      <div class="report-datelabel" id="insights-datelabel"></div>
+      <div class="insights-header" id="insights-header">
+        ${window.badgesForReport(initial)}
+      </div>
+      ${initial.key_takeaway ? `<div class="key-takeaway" id="insights-takeaway">${initial.key_takeaway}</div>` : `<div id="insights-takeaway"></div>`}
+      ${tabsHtml}
+      <div id="insights-conclusions"></div>
+      <div id="insights-catalysts"></div>
+      <details class="analysis-details">
+        <summary>▸ Xem phân tích đầy đủ</summary>
+        <div class="markdown-body" id="insights-body"></div>
+      </details>
+      <div class="sector-momentum" id="monthly-momentum" style="display:none;"></div>
+      <div class="monthly-full-charts" id="monthly-full-charts" style="display:none;"></div>
+      <div class="report-meta" id="insights-meta"></div>
+    </div>
+  `;
+
+  window.showReportInDashboard(initial, initialKind);
+
+  // Tab handlers
+  el.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      el.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const kind = btn.dataset.tab;
+      window.showReportInDashboard(reportRef(kind), kind);
+    });
+  });
+};
+
+// initInsights() được gọi cuối file — sau khi TODAY_INCLUDE / DEFAULT_VIEW /
+// computeStatContext (const) đã khởi tạo, vì auto-conclusions phụ thuộc chúng.
+
+// === Today's releases ===
+window.renderReleases = function(dateStr) {
+  const el = document.getElementById("today-releases");
+  let list = [];
+  let displayDate = dateStr;
+
+  if (!dateStr) {
+    const r = D.daily_releases || {};
+    list = r.releases || [];
+    displayDate = r.date || "—";
+  } else {
+    list = (D.releases_history || {})[dateStr] || [];
+  }
+
+  if (!list.length) {
+    el.innerHTML = `<div class="empty">Không có chỉ số US nào công bố ngày ${displayDate}.</div>`;
+    return;
+  }
+  const rows = list.map((ev, i) => {
+    const surprise = classifySurprise(ev);
+    return `<tr class="clickable" data-release-idx="${i}">
+      <td>${ev.name || "—"} <span class="info-icon" title="Click để xem chi tiết">i</span></td>
+      <td>${ev.time ? ev.time.slice(11, 16) : "—"}</td>
+      <td class="num">${ev.actual ?? "—"}</td>
+      <td class="num">${ev.forecast ?? "—"}</td>
+      <td class="num">${ev.previous ?? "—"}</td>
+      <td class="${surprise.cls}">${surprise.label}</td>
+    </tr>`;
+  }).join("");
+  // Day summary banner — chỉ có cho view hôm nay (release_summary + inflation_context)
+  const summary = (!dateStr && D.daily_releases) ? (D.daily_releases.release_summary || {}) : {};
+  const infl = (!dateStr && D.daily_releases) ? (D.daily_releases.inflation_context || {}) : {};
+  let banner = "";
+  if (summary.signal_release_count != null) {
+    const sc = summary.surprise_count || 0;
+    banner += `<div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+      <span class="insights-badge badge-neutral">${summary.signal_release_count} chỉ số chính</span>
+      <span class="insights-badge ${sc > 0 ? 'badge-warn' : 'badge-neutral'}">${sc} surprise</span>
+      <span class="insights-badge badge-neutral">${summary.noise_release_count || 0} nhiễu</span>
+    </div>`;
+  }
+  if (infl && infl.hard_data_hot) {
+    banner += `<div style="margin-bottom:10px; padding:8px 12px; border-radius:8px; background:rgba(248,113,113,.12); border:1px solid rgba(248,113,113,.35); color:#fca5a5; font-size:12px;">
+      ⚠️ <b>Hard-data lạm phát còn nóng</b> — Core PCE YoY ${infl.core_pce_yoy ?? '—'}% · CPI YoY ${infl.cpi_yoy ?? '—'}%. Soft-data dovish chưa đủ xác nhận disinflation.
+    </div>`;
+  }
+  el.innerHTML = `
+    <div style="margin-bottom:8px; color: var(--muted); font-size: 12px;">Ngày: ${displayDate}</div>
+    ${banner}
+    <table>
+      <thead><tr><th>Chỉ số</th><th>Giờ (NY)</th><th>Actual</th><th>Forecast</th><th>Previous</th><th>Surprise</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  el.querySelectorAll("tr.clickable").forEach(tr => {
+    tr.addEventListener("click", () => {
+      const idx = +tr.dataset.releaseIdx;
+      const ev = list[idx];
+      openModal({ name: ev.name, releaseData: ev });
+    });
+  });
+};
+
+window.renderReleases();
+
+function classifySurprise(ev) {
+  // Ưu tiên field surprise đã chấm sẵn (z-score tất định từ enrich_releases.py)
+  if (ev.surprise && ev.surprise.label) {
+    const lbl = ev.surprise.label;
+    if (lbl === "in-line") return { label: "in-line", cls: "surprise-inline" };
+    const up = lbl.indexOf("above") !== -1;
+    const shock = lbl.indexOf("shock") !== -1;
+    return {
+      label: (shock ? "⚡ " : "") + (up ? "↑ trên dự báo" : "↓ dưới dự báo"),
+      cls: up ? "surprise-beat" : "surprise-miss"
+    };
+  }
+  // Fallback cho dòng không có surprise (nhiễu/không forecast)
+  const a = parseFloat(String(ev.actual ?? "").replace(/[%,KMB]/g, ""));
+  const f = parseFloat(String(ev.forecast ?? "").replace(/[%,KMB]/g, ""));
+  if (isNaN(a) || isNaN(f)) return { label: "—", cls: "surprise-inline" };
+  if (Math.abs(a - f) < Math.max(0.05, Math.abs(f) * 0.02)) return { label: "in-line", cls: "surprise-inline" };
+  return a > f ? { label: "↑ trên dự báo", cls: "surprise-beat" } : { label: "↓ dưới dự báo", cls: "surprise-miss" };
+}
+
+// === KPI grid ===
+const KPI_KEYS = ["DFF", "DGS10", "DGS2", "T10Y2Y", "UNRATE", "CPIAUCSL", "CPILFESL", "PCEPILFE"];
+(function renderKPIs() {
+  const wrap = document.getElementById("kpi-grid");
+  const h = D.history || {};
+  wrap.innerHTML = KPI_KEYS.map(k => {
+    const s = h[k];
+    if (!s || !s.latest) return `<div class="card clickable" data-fred-id="${k}"><div class="kpi-label">${k}</div><div class="kpi-value">—</div></div>`;
+    const delta = s.change_pct;
+    const deltaCls = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
+    return `<div class="card clickable" data-fred-id="${k}">
+      <div class="kpi-label">${s.label || k} <span class="info-icon" title="Xem giải thích">i</span></div>
+      <div class="kpi-value">${fmt(s.latest.value, 2)}</div>
+      <div class="kpi-delta ${deltaCls}">${delta != null ? fmtPct(delta, 2) : ""} <span style="color: var(--muted)">· ${s.latest.date}</span></div>
+    </div>`;
+  }).join("");
+  wrap.querySelectorAll(".clickable").forEach(card => {
+    card.addEventListener("click", () => {
+      const fredId = card.dataset.fredId;
+      const s = h[fredId] || {};
+      openModal({ fredId, latest: s.latest, change: s.change_pct });
+    });
+  });
+})();
+
+// === Charts ===
+// Groups used ONLY for "full monthly view" (when user clicks Tháng tab).
+// Daily dashboard shows dynamic trends for today's releases instead.
+const GROUPS = {
+  "Lạm phát": ["CPIAUCSL", "CPILFESL", "PCEPI", "PCEPILFE", "PPIFID"],
+  "Lao động": ["PAYEMS", "UNRATE", "ICSA", "CES0500000003", "JTSJOL"],
+  "Tăng trưởng & PMI": ["A191RL1Q225SBEA", "RSAFS", "INDPRO", "MANEMP", "UMCSENT", "TTLCONS", "DGORDER", "GDPNOW"],
+  "Lãi suất & Yield Curve": ["DFF", "DGS10", "DGS2", "DGS3MO", "DGS6MO", "T10Y2Y"],
+  "Cross-asset (FRED)": ["DTWEXBGS", "VIXCLS", "DCOILWTICO", "BAMLH0A0HYM2", "BAMLC0A0CM", "T10YIE"],
+};
+
+// Smart default view per FRED series.
+// "level" = raw value | "yoy" = % vs 12 periods ago | "mom" = % vs prior period
+// "mom_delta" = absolute change vs prior period (for count series like NFP)
+// "level_ma4" = level smoothed with 4-period moving average
+const DEFAULT_VIEW = {
+  // Inflation → YoY (Fed compares vs 2% target)
+  CPIAUCSL: "yoy", CPILFESL: "yoy", PCEPI: "yoy", PCEPILFE: "yoy",
+  PPIFID: "yoy", PPIFES: "yoy",   // PPI Final Demand + Core PPI (match investing.com)
+  // Labor
+  PAYEMS: "mom_delta",      // change in jobs (k people)
+  UNRATE: "level",          // already %
+  ICSA: "level_ma4",        // 4-week MA reduces noise
+  CES0500000003: "yoy",     // wage growth
+  JTSJOL: "level",          // openings count
+  // Growth — GDP series is already a QoQ-annualized rate, so show it as "level".
+  // Retail Sales / Industrial Production / Durable Goods: investing.com headlines MoM%.
+  A191RL1Q225SBEA: "level", RSAFS: "mom", INDPRO: "mom", DGORDER: "mom",
+  MANEMP: "yoy", UMCSENT: "level",
+  // Import/Export prices — investing.com & BLS quote 12-month % change
+  IR: "yoy", IQ: "yoy",
+  // Housing
+  HOUST: "yoy", EXHOSLUSM495S: "yoy", CSUSHPINSA: "yoy",
+  // Rates → already %, just level
+  DFF: "level", DGS10: "level", DGS2: "level", DGS3MO: "level", T10Y2Y: "level",
+  // Fed vùng — chỉ số/index (có thể âm) → chỉ xem level
+  CFNAI: "level", NFCI: "level", ANFCI: "level", WEI: "level",
+  // Fed vùng — dự báo & kỳ vọng (Cách B)
+  SPF_GDP: "level", SPF_CPI: "level", ADS: "level", NYFED_RSTAR: "level", SCE_INFL_1Y: "level",
+};
+
+// Reference lines per series + view combo
+function getReferenceLines(fredId, view) {
+  const lines = [];
+  // Fed 2% target on inflation series, only in YoY view
+  if (view === "yoy" && ["CPIAUCSL", "CPILFESL", "PCEPI", "PCEPILFE", "PPIFID", "PPIFES"].includes(fredId)) {
+    lines.push({ value: 2, label: "Fed target 2%", color: "#fbbf24" });
+  }
+  // ~2% trend-growth line on GDP growth rate
+  if (fredId === "A191RL1Q225SBEA") {
+    lines.push({ value: 2, label: "Trend ~2%", color: "#fbbf24" });
+  }
+  // Recession line 0 on T10Y2Y spread
+  if (fredId === "T10Y2Y") {
+    lines.push({ value: 0, label: "Yield curve inversion", color: "#f87171" });
+  }
+  // Fed vùng — ngưỡng diễn giải
+  if (fredId === "CFNAI") {
+    lines.push({ value: 0, label: "Trend tăng trưởng", color: "#fbbf24" });
+    lines.push({ value: -0.7, label: "Ngưỡng suy thoái", color: "#f87171" });
+  }
+  if (fredId === "NFCI" || fredId === "ANFCI") {
+    lines.push({ value: 0, label: "0 = TB lịch sử (>0 thắt chặt)", color: "#fbbf24" });
+  }
+  if (fredId === "WEI") {
+    lines.push({ value: 2, label: "Trend ~2%", color: "#fbbf24" });
+  }
+  // Dự báo lạm phát so với mục tiêu Fed 2%
+  if (fredId === "SPF_CPI" || fredId === "SCE_INFL_1Y") {
+    lines.push({ value: 2, label: "Fed target 2%", color: "#fbbf24" });
+  }
+  if (fredId === "ADS") {
+    lines.push({ value: 0, label: "0 = điều kiện TB", color: "#fbbf24" });
+  }
+  return lines;
+}
+
+// Transform raw history → {labels, values, unit} per view mode
+function transformSeries(history, view) {
+  if (!history || !history.length) return { labels: [], values: [], unitSuffix: "" };
+  const values = history.map(p => p.value);
+  const labels = history.map(p => p.date);
+  switch (view) {
+    case "yoy": {
+      // Compare value vs value 12 periods ago. If series is daily, use 252 trading days. We assume monthly here for FRED macros.
+      // Detect frequency: if avg gap between labels < 10 days, assume daily and use 252; else 12.
+      const lag = guessLag(labels, 12);
+      const out = values.map((v, i) => {
+        if (i < lag || values[i - lag] === 0 || values[i - lag] == null) return null;
+        return ((v - values[i - lag]) / values[i - lag]) * 100;
+      });
+      return { labels, values: out, unitSuffix: "% YoY" };
+    }
+    case "mom": {
+      const out = values.map((v, i) => {
+        if (i < 1 || values[i - 1] === 0 || values[i - 1] == null) return null;
+        return ((v - values[i - 1]) / values[i - 1]) * 100;
+      });
+      return { labels, values: out, unitSuffix: "% MoM" };
+    }
+    case "mom_delta": {
+      const out = values.map((v, i) => i < 1 ? null : (v - values[i - 1]));
+      return { labels, values: out, unitSuffix: "Δ" };
+    }
+    case "level_ma4": {
+      const out = values.map((v, i) => {
+        if (i < 3) return null;
+        return (values[i] + values[i-1] + values[i-2] + values[i-3]) / 4;
+      });
+      return { labels, values: out, unitSuffix: " (4-wk MA)" };
+    }
+    case "level":
+    default:
+      return { labels, values, unitSuffix: "" };
+  }
+}
+
+function guessLag(labels, monthlyLag) {
+  if (labels.length < 2) return monthlyLag;
+  const t1 = new Date(labels[labels.length - 1]).getTime();
+  const t0 = new Date(labels[labels.length - 2]).getTime();
+  const gapDays = (t1 - t0) / 86400000;
+  if (gapDays < 10) return 252;          // daily series → 252 trading days
+  if (gapDays < 80) return 12;           // monthly
+  return 4;                              // quarterly
+}
+
+// Slice last N points (after trimming nulls from transform), with sensible windows per frequency.
+function tailWindow(labels, values) {
+  // find last non-null then cap to 60 points (e.g., 60 months = 5y, 60 days = ~3 mo for daily)
+  const startIdx = Math.max(0, values.length - 60);
+  // For daily series, want longer window
+  if (labels.length >= 2) {
+    const gap = (new Date(labels[labels.length-1]) - new Date(labels[labels.length-2])) / 86400000;
+    if (gap < 10) {
+      // daily → take last 504 points (~2 years)
+      return { labels: labels.slice(-504), values: values.slice(-504) };
+    }
+  }
+  return { labels: labels.slice(startIdx), values: values.slice(startIdx) };
+}
+
+const chartInstances = {};
+
+// === Kết luận tự sinh (tất định) từ lịch sử mỗi chỉ số ===
+// Tính trên ĐÚNG metric đang vẽ (view) để câu chữ khớp với đường trên biểu đồ.
+// Không để LLM tự phán — toàn bộ là so sánh số học với chính lịch sử của chỉ số.
+function _freqOf(labels) {
+  if (labels.length < 2) return { unit: "kỳ" };
+  const n = labels.length, gaps = [];
+  for (let i = Math.max(1, n - 6); i < n; i++) gaps.push((new Date(labels[i]) - new Date(labels[i - 1])) / 86400000);
+  gaps.sort((a, b) => a - b);
+  const g = gaps[Math.floor(gaps.length / 2)] || 30;
+  if (g < 4) return { unit: "ngày", days: 1 };
+  if (g < 12) return { unit: "tuần", days: 7 };
+  if (g < 45) return { unit: "tháng", days: 30 };
+  if (g < 100) return { unit: "quý", days: 90 };
+  return { unit: "năm", days: 365 };
+}
+// Đổi số kỳ → cụm thời gian thân thiện ("14 tháng", "2 năm"...)
+function _spanLabel(periods, freq) {
+  if (freq.unit === "tháng") {
+    if (periods >= 12) { const y = periods / 12; return (Math.round(y * 10) / 10) + " năm"; }
+    return periods + " tháng";
+  }
+  if (freq.unit === "tuần") {
+    if (periods >= 13) { const m = Math.round(periods / 4.33); return m + " tháng"; }
+    return periods + " tuần";
+  }
+  return periods + " " + freq.unit;
+}
+function computeStatContext(fredId, view) {
+  const s = (D.history || {})[fredId];
+  if (!s || !s.history || s.history.length < 4) return null;
+  const t = transformSeries(s.history, view);
+  const pts = [];
+  for (let i = 0; i < t.values.length; i++) {
+    const v = t.values[i];
+    if (v != null && isFinite(v)) pts.push({ d: t.labels[i], v: v });
+  }
+  if (pts.length < 4) return null;
+  const vals = pts.map(p => p.v), labels = pts.map(p => p.d), n = vals.length;
+  const latest = vals[n - 1], freq = _freqOf(labels);
+  const unit = (t.unitSuffix || "").trim();
+  const fmtv = x => fmt(x, Math.abs(x) >= 100 ? 0 : (Math.abs(x) >= 10 ? 1 : 2));
+  const badges = [];
+
+  // 1) Vị trí so với toàn lịch sử (percentile)
+  const below = vals.slice(0, n - 1).filter(v => v < latest).length;
+  const pct = Math.round(below / (n - 1) * 100);
+  let band, tone;
+  if (pct >= 80) { band = "vùng CAO"; tone = "high"; }
+  else if (pct >= 60) { band = "hơi cao"; tone = "high"; }
+  else if (pct > 40) { band = "mức trung bình"; tone = "neutral"; }
+  else if (pct > 20) { band = "hơi thấp"; tone = "low"; }
+  else { band = "vùng THẤP"; tone = "low"; }
+  badges.push({ text: `${band} — cao hơn ${pct}% lịch sử`, tone });
+
+  // 2) Đỉnh / đáy trong K kỳ (record streak)
+  let kHigh = 0; for (let i = n - 2; i >= 0; i--) { if (vals[i] < latest) kHigh++; else break; }
+  let kLow = 0; for (let i = n - 2; i >= 0; i--) { if (vals[i] > latest) kLow++; else break; }
+  if (kHigh >= 3 && kHigh >= kLow) {
+    const span = kHigh >= n - 1 ? "toàn lịch sử" : "trong " + _spanLabel(kHigh + 1, freq);
+    badges.push({ text: `Cao nhất ${span}`, tone: "high" });
+  } else if (kLow >= 3 && kLow > kHigh) {
+    const span = kLow >= n - 1 ? "toàn lịch sử" : "trong " + _spanLabel(kLow + 1, freq);
+    badges.push({ text: `Thấp nhất ${span}`, tone: "low" });
+  }
+
+  // 3) Lệch bất thường so với TB ~12 kỳ gần đây (z-score)
+  const w = Math.min(12, n - 1), recent = vals.slice(n - 1 - w, n - 1);
+  if (recent.length >= 4) {
+    const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
+    const sd = Math.sqrt(recent.reduce((a, b) => a + (b - mean) * (b - mean), 0) / recent.length);
+    if (sd > 0) {
+      const z = (latest - mean) / sd;
+      if (z >= 1.5) badges.push({ text: `Cao bất thường vs TB gần đây (+${z.toFixed(1)}σ)`, tone: "high" });
+      else if (z <= -1.5) badges.push({ text: `Thấp bất thường vs TB gần đây (${z.toFixed(1)}σ)`, tone: "low" });
+    }
+  }
+
+  // 4) Xu hướng (chuỗi cùng chiều từ cuối, hoặc so với 3 kỳ trước)
+  let dir = 0, streak = 0;
+  for (let i = n - 1; i >= 1; i--) {
+    const ch = vals[i] - vals[i - 1], sgn = ch > 0 ? 1 : (ch < 0 ? -1 : 0);
+    if (i === n - 1) { dir = sgn; streak = sgn !== 0 ? 1 : 0; }
+    else if (sgn === dir && sgn !== 0) streak++;
+    else break;
+  }
+  if (streak >= 2 && dir > 0) badges.push({ text: `Đang tăng (${streak} kỳ liên tiếp)`, tone: "up" });
+  else if (streak >= 2 && dir < 0) badges.push({ text: `Đang giảm (${streak} kỳ liên tiếp)`, tone: "down" });
+  else {
+    const k = Math.min(3, n - 1), prev = vals[n - 1 - k], chg = latest - prev;
+    const rel = prev !== 0 ? Math.abs(chg / prev) : 1;
+    if (rel < 0.005) badges.push({ text: "Đi ngang", tone: "neutral" });
+    else if (chg > 0) badges.push({ text: "Xu hướng tăng", tone: "up" });
+    else badges.push({ text: "Xu hướng giảm", tone: "down" });
+  }
+
+  return { badges: badges.slice(0, 3), valueLine: `${fmtv(latest)}${unit ? " " + unit : ""}`, label: s.label || fredId };
+}
+const _TONE_CLS = { high: "sc-high", low: "sc-low", up: "sc-up", down: "sc-down", neutral: "sc-neutral" };
+function updateStatContext(fredId, view) {
+  const box = document.getElementById("stat-" + fredId);
+  if (!box) return;
+  const sc = computeStatContext(fredId, view);
+  if (!sc) { box.innerHTML = ""; return; }
+  box.innerHTML = `<span class="sc-value">${sc.valueLine}</span>` +
+    sc.badges.map(b => `<span class="sc-badge ${_TONE_CLS[b.tone] || "sc-neutral"}">${b.text}</span>`).join("");
+}
+
+function renderChart(fredId, view) {
+  const s = (D.history || {})[fredId];
+  if (!s || !s.history) return;
+  const t = transformSeries(s.history, view);
+  const { labels, values } = tailWindow(t.labels, t.values);
+
+  const datasets = [{
+    data: values,
+    borderColor: "#60a5fa",
+    backgroundColor: "rgba(96,165,250,0.1)",
+    fill: true,
+    tension: 0.25,
+    pointRadius: values.length <= 3 ? 4 : 0,  // chuỗi thưa (chỉ số mới tích lũy) → hiện chấm
+    borderWidth: 1.5,
+    spanGaps: true,
+  }];
+
+  // Reference lines as horizontal datasets
+  getReferenceLines(fredId, view).forEach(ref => {
+    datasets.push({
+      data: labels.map(() => ref.value),
+      borderColor: ref.color,
+      borderDash: [4, 4],
+      borderWidth: 1,
+      pointRadius: 0,
+      fill: false,
+      label: ref.label,
+    });
+  });
+
+  const ctx = document.getElementById("chart-" + fredId);
+  if (chartInstances[fredId]) chartInstances[fredId].destroy();
+  chartInstances[fredId] = new Chart(ctx, {
+    type: "line",
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: "index",
+          intersect: false,
+          callbacks: {
+            label: (ctx) => {
+              if (ctx.datasetIndex === 0) {
+                const v = ctx.parsed.y;
+                if (v == null) return "—";
+                return fmt(v, 2) + " " + t.unitSuffix;
+              }
+              return ctx.dataset.label;
+            },
+          },
+        },
+      },
+      scales: {
+        x: { ticks: { color: "#8b96a3", maxTicksLimit: 6, font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { color: "#8b96a3", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.05)" } },
+      },
+    },
+  });
+  updateStatContext(fredId, view);   // kết luận tự sinh khớp đúng metric đang vẽ
+}
+
+const VIEW_LABELS = {
+  level: "Level",
+  yoy: "YoY%",
+  mom: "MoM%",
+  mom_delta: "Δ MoM",
+  level_ma4: "MA",
+};
+
+// Series that are already a rate/%; MoM/YoY transforms are meaningless → level only
+const LEVEL_ONLY = new Set(["A191RL1Q225SBEA", "CFNAI", "NFCI", "ANFCI", "WEI",
+  "SPF_GDP", "SPF_CPI", "ADS", "NYFED_RSTAR", "SCE_INFL_1Y"]);
+
+function buildToggleButtons(fredId, currentView) {
+  if (LEVEL_ONLY.has(fredId)) {
+    return `<button class="view-btn active" data-view="level">${VIEW_LABELS.level}</button>`;
+  }
+  // Show 3 sensible options based on default view
+  const options = ["level", "mom", "yoy"];
+  // If default is mom_delta (NFP), include it instead of mom
+  if (DEFAULT_VIEW[fredId] === "mom_delta") {
+    options.splice(1, 1, "mom_delta");
+  }
+  // If default is level_ma4 (jobless claims), include it instead of mom
+  if (DEFAULT_VIEW[fredId] === "level_ma4") {
+    options.splice(1, 1, "level_ma4");
+  }
+  return options.map(v => `<button class="view-btn${v === currentView ? " active" : ""}" data-view="${v}">${VIEW_LABELS[v]}</button>`).join("");
+}
+
+// Helper: build a chart card with label + toggle. Shared by Daily releases section and Monthly full view.
+function buildChartCard(fredId, h, opts) {
+  opts = opts || {};
+  const defaultView = DEFAULT_VIEW[fredId] || "level";
+  const badge = opts.isNew ? `<span class="new-badge">MỚI</span>` : "";
+  return `
+    <div class="card" data-fred-id="${fredId}">
+      <div class="card-header">
+        <div class="kpi-label clickable-label" data-fred-id="${fredId}">${(h[fredId] && h[fredId].label) || fredId}${badge} <span class="info-icon" title="Xem giải thích">i</span></div>
+        <div class="view-toggle" data-fred-id="${fredId}">${buildToggleButtons(fredId, defaultView)}</div>
+      </div>
+      <div class="chart-box"><canvas id="chart-${fredId}"></canvas></div>
+      ${opts.showStats ? `<div class="stat-context" id="stat-${fredId}"></div>` : ""}
+    </div>`;
+}
+
+function bindChartCardEvents(wrap, h) {
+  wrap.querySelectorAll(".clickable-label").forEach(el => {
+    el.addEventListener("click", () => {
+      const fredId = el.dataset.fredId;
+      const s = h[fredId] || {};
+      openModal({ fredId, latest: s.latest, change: s.change_pct });
+    });
+  });
+  wrap.querySelectorAll(".view-toggle").forEach(toggleGroup => {
+    const fredId = toggleGroup.dataset.fredId;
+    toggleGroup.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        toggleGroup.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderChart(fredId, btn.dataset.view);
+      });
+    });
+  });
+}
+
+// === Daily release trends panel ===
+// TODAY_INCLUDE = danh sách chỉ số người dùng THEO DÕI (báo Claude để thêm/bớt). Panel
+// CHỈ hiện chart của chỉ số nào VỪA CÔNG BỐ HÔM NAY và nằm trong danh sách này → ngày
+// không công bố thì không hiện (tránh loãng khi theo dõi nhiều chỉ số). Rỗng → hiện tất
+// cả công bố hôm nay (fallback). DFF (Fed Funds Rate) luôn bị loại.
+const TODAY_EXCLUDE = new Set(["DFF"]);
+const TODAY_INCLUDE = [
+  // Lạm phát / giá
+  "CPIAUCSL", "PCEPI", "PPIFID", "IR", "IQ",
+  // Lao động
+  "PAYEMS", "UNRATE", "ICSA", "CCSA", "CES0500000003", "AWHAETP", "OPHNFB", "ULCNFB",
+  // Tăng trưởng / tiêu dùng / sản xuất
+  "RSAFS", "RETAILIMSA", "WHLSLRIMSA", "AMTMNO", "DGORDER", "TTLCONS",
+  "PI", "PCE", "TOTALSA", "BOPGTB", "ISM_MFG", "ISM_SVC",
+  // Niềm tin
+  "CSCICP03USM665S",
+  // Nhà ở
+  "HOUST", "PERMIT", "HSN1F", "EXHOSLUSM495S",
+  // Năng lượng (EIA)
+  "EIA_CRUDE", "EIA_GASOLINE", "EIA_DISTILLATE",
+];
+
+function releasedIdsFor(releases) {
+  const h = D.history || {};
+  const set = new Set();
+  (releases || []).forEach(rel => {
+    const info = lookupIndicator({ name: rel.name });
+    if (info && info._fredId && !TODAY_EXCLUDE.has(info._fredId)
+        && h[info._fredId] && (h[info._fredId].history || []).length > 0) {
+      set.add(info._fredId);
+    }
+  });
+  return set;
+}
+
+let selectedReleaseDate = null;
+
+function renderTodayPanel() {
+  const el = document.getElementById("release-trends");
+  if (!el) return;
+  const h = D.history || {};
+  const relHist = D.releases_history || {};
+  // Mọi ngày có raw → chọn được; mặc định ngày mới nhất.
+  const dates = Object.keys(relHist).sort().reverse();
+  if (!selectedReleaseDate || !relHist[selectedReleaseDate]) {
+    selectedReleaseDate = (D.daily_releases && D.daily_releases.date) || dates[0];
+  }
+  const releases = relHist[selectedReleaseDate] || [];
+  const releasedThatDay = releasedIdsFor(releases);
+
+  // Thanh chọn ngày (gắn panel với NGÀY được chọn, không phải luôn ngày mới nhất)
+  let bar = document.getElementById("release-date-bar");
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "release-date-bar";
+    bar.className = "today-controls";
+    el.parentNode.insertBefore(bar, el);
+  }
+  bar.innerHTML = `<label class="today-hint" for="release-date-picker">Ngày công bố:</label>
+    <select id="release-date-picker" class="date-select">
+      ${dates.map(d => `<option value="${d}" ${d === selectedReleaseDate ? "selected" : ""}>${d}${d === dates[0] ? " (mới nhất)" : ""}</option>`).join("")}
+    </select>`;
+  document.getElementById("release-date-picker").addEventListener("change", e => {
+    selectedReleaseDate = e.target.value;
+    renderTodayPanel();
+  });
+
+  // CHỈ hiện chỉ số công bố ĐÚNG NGÀY ĐÓ và nằm trong danh sách theo dõi.
+  let ids = TODAY_INCLUDE.length
+    ? TODAY_INCLUDE.filter(fid => releasedThatDay.has(fid))
+    : Array.from(releasedThatDay);
+
+  if (!ids.length) {
+    el.innerHTML = `<div class="empty">Ngày ${selectedReleaseDate} không có chỉ số nào trong danh sách theo dõi của bạn được công bố.</div>`;
+    return;
+  }
+
+  el.innerHTML = ids.map(fid => buildChartCard(fid, h, { showStats: true })).join("");
+  bindChartCardEvents(el, h);
+  ids.forEach(fid => renderChart(fid, DEFAULT_VIEW[fid] || "level"));
+}
+
+renderTodayPanel();
+
+// === Theo dõi Fed vùng — luôn hiện (tự cập nhật, kèm stat-context) ===
+// Không gate theo release-day vì các Fed vùng tự công bố (không nằm trên lịch investing.com).
+// 2 nhóm: hiện trạng (chỉ số FRED) vs dự báo/kỳ vọng (SPF/ADS/r*/SCE — fetch_fed_forecasts.py).
+const FED_GROUPS = [
+  { title: "Hiện trạng kinh tế & tài chính", ids: ["CFNAI", "NFCI", "ANFCI", "WEI", "ADS"] },
+  { title: "Dự báo & kỳ vọng", ids: ["SPF_GDP", "SPF_CPI", "NYFED_RSTAR", "SCE_INFL_1Y"] },
+];
+function renderFedRegional() {
+  const el = document.getElementById("fed-regional");
+  if (!el) return;
+  const h = D.history || {};
+  el.classList.remove("grid", "grid-3"); // dùng layout nhóm thay vì grid phẳng
+  let html = "", all = [];
+  FED_GROUPS.forEach(g => {
+    const ids = g.ids.filter(fid => h[fid] && (h[fid].history || []).length > 0);
+    if (!ids.length) return;
+    all = all.concat(ids);
+    html += `<h4 style="color:var(--blue);margin:6px 0 10px;">${g.title}</h4>
+      <div class="grid grid-3" style="margin-bottom:18px;">${ids.map(fid => buildChartCard(fid, h, { showStats: true })).join("")}</div>`;
+  });
+  if (!all.length) { el.innerHTML = `<div class="empty">Chưa có dữ liệu Fed vùng.</div>`; return; }
+  el.innerHTML = html;
+  bindChartCardEvents(el, h);
+  all.forEach(fid => renderChart(fid, DEFAULT_VIEW[fid] || "level"));
+}
+renderFedRegional();
+
+// Bullets "Điểm chính" cho insights card — tất định từ stat context của các chỉ số
+// trong watchlist công bố đúng ngày của báo cáo. 1 dòng/chỉ số (vị trí + đỉnh/đáy).
+function autoConclusionBullets(date) {
+  const relHist = D.releases_history || {};
+  let releases = relHist[date];
+  if (!releases && D.daily_releases && D.daily_releases.date === date) releases = D.daily_releases.releases;
+  releases = releases || [];
+  const ids = [], seen = new Set();
+  releases.forEach(rel => {
+    const info = lookupIndicator({ name: rel.name });
+    if (info && info._fredId && !TODAY_EXCLUDE.has(info._fredId)
+        && TODAY_INCLUDE.includes(info._fredId) && !seen.has(info._fredId)) {
+      seen.add(info._fredId); ids.push(info._fredId);
+    }
+  });
+  const lines = [];
+  ids.forEach(fid => {
+    const sc = computeStatContext(fid, DEFAULT_VIEW[fid] || "level");
+    if (!sc || !sc.badges.length) return;
+    const main = sc.badges[0].text;
+    const rec = sc.badges.find((b, i) => i > 0 && (/^Cao nhất|^Thấp nhất|bất thường/.test(b.text)));
+    const extra = rec && rec.text !== main ? "; " + rec.text : "";
+    lines.push(`<li><strong>${sc.label}</strong>: ${sc.valueLine} — ${main}${extra}</li>`);
+  });
+  return lines;
+}
+
+window.initInsights();   // gọi sau khi mọi const (TODAY_INCLUDE, DEFAULT_VIEW...) đã sẵn
+
+// === Monthly full view — lazy renders when Tháng tab clicked ===
+// Bar chart "Dự báo luân chuyển dòng tiền tháng tới" — CHỈ biểu đồ (phân tích sâu
+// nằm ở file agent data/monthly/rotation_forecast_<month>.md, KHÔNG đưa lên dashboard).
+function rotationForecastBlockHtml() {
+  const fc = D.rotation_forecast;
+  if (!fc || !(fc.items || []).length) return "";
+  return `
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-header"><div class="kpi-label">🔮 Dự báo luân chuyển dòng tiền — tháng ${fc.target_month || ""}
+        <span style="font-weight:400;color:var(--muted);font-size:11px;">(forecast_score · 🟢 nhận tiền · 🟡 hình thành/ra · 🔴 né)</span></div></div>
+      <div class="chart-box" style="height:320px;"><canvas id="chart-rotation-forecast"></canvas></div>
+      <div class="today-hint" style="margin-top:6px;">Regime: ${fc.regime_summary || ""} · ${fc.n_sessions || 0} phiên · as-of ${fc.as_of || ""}.</div>
+    </div>`;
+}
+function renderRotationForecastChart() {
+  const fc = D.rotation_forecast;
+  const ctx = document.getElementById("chart-rotation-forecast");
+  if (!fc || !ctx || !(fc.items || []).length) return;
+  const items = fc.items;
+  if (chartInstances["rotation-forecast"]) chartInstances["rotation-forecast"].destroy();
+  chartInstances["rotation-forecast"] = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: items.map(i => `${i.ticker}`),
+      datasets: [{ data: items.map(i => i.forecast_score), backgroundColor: items.map(i => i.color), borderWidth: 0 }],
+    },
+    options: {
+      indexAxis: "y", responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (c) => {
+          const it = items[c.dataIndex];
+          return `${it.name}: ${it.phase} (${it.confidence}) · score ${c.parsed.x >= 0 ? "+" : ""}${c.parsed.x}`;
+        } } },
+      },
+      scales: {
+        x: { ticks: { color: "#8b96a3", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.05)" } },
+        y: { ticks: { color: "#cbd5e1", font: { size: 11 } }, grid: { display: false } },
+      },
+    },
+  });
+}
+
+function renderMonthlyFullCharts(container) {
+  const h = D.history || {};
+  // Báo cáo tháng = forecast rotation + TOÀN BỘ biểu đồ ở format stat-badge (vùng cao/thấp
+  // · đỉnh/đáy · xu hướng), KHÔNG có panel "chỉ số công bố trong ngày" (đó là báo cáo ngày).
+  container.innerHTML = rotationForecastBlockHtml() +
+    `<h4>Xu hướng đầy đủ các chỉ số FRED (kèm kết luận tự tính)</h4>` +
+    Object.entries(GROUPS).map(([groupName, keys]) => `
+      <div style="margin-top: 16px;">
+        <h4 style="color: var(--blue);">${groupName}</h4>
+        <div class="grid grid-3">${keys.map(k => buildChartCard(k, h, { showStats: true })).join("")}</div>
+      </div>
+    `).join("");
+  bindChartCardEvents(container, h);
+  renderRotationForecastChart();
+  // Initial render for all (renderChart tự gọi updateStatContext → badge xuất hiện)
+  Object.values(GROUPS).flat().forEach(k => renderChart(k, DEFAULT_VIEW[k] || "level"));
+}
+
+// === Market Context (Cross-asset) ===
+// Combines 6 FRED cross-asset series + 3 yfinance commodities/BTC.
+// FRED data lives in D.history, commodities in D.cross_asset.assets.
+const CROSS_ASSET_LAYOUT = [
+  // [key, type ('fred' or 'asset'), unit display, color]
+  { key: "DTWEXBGS", type: "fred", label: "USD Index (DXY)", color: "#fbbf24" },
+  { key: "VIXCLS", type: "fred", label: "VIX", color: "#f87171" },
+  { key: "DCOILWTICO", type: "fred", label: "WTI Crude", color: "#fb923c" },
+  { key: "GC=F", type: "asset", label: "Gold", color: "#facc15" },
+  { key: "HG=F", type: "asset", label: "Copper (Dr. Copper)", color: "#fb7185" },
+  { key: "BTC-USD", type: "asset", label: "Bitcoin", color: "#f59e0b" },
+  { key: "BAMLH0A0HYM2", type: "fred", label: "HY Credit Spread", color: "#a78bfa" },
+  { key: "BAMLC0A0CM", type: "fred", label: "IG Credit Spread", color: "#94a3b8" },
+  { key: "T10YIE", type: "fred", label: "10Y Inflation Breakeven", color: "#22d3ee" },
+];
+
+function buildAssetSparkline(history, color) {
+  return {
+    type: "line",
+    data: {
+      labels: history.map(p => p.date),
+      datasets: [{
+        data: history.map(p => p.value),
+        borderColor: color,
+        backgroundColor: color + "22",
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: true,
+        tension: 0.25,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { mode: "index", intersect: false } },
+      scales: {
+        x: { ticks: { color: "#8b96a3", maxTicksLimit: 4, font: { size: 9 } }, grid: { display: false } },
+        y: { ticks: { color: "#8b96a3", font: { size: 9 } }, grid: { color: "rgba(255,255,255,0.05)" } },
+      },
+    },
+  };
+}
+
+(function renderCrossAsset() {
+  const el = document.getElementById("cross-asset-section");
+  const hist = D.history || {};
+  const assets = (D.cross_asset && D.cross_asset.assets) || {};
+
+  // Compute summary signal: risk-on or risk-off
+  const dxy = hist["DTWEXBGS"];
+  const vix = hist["VIXCLS"];
+  const hy = hist["BAMLH0A0HYM2"];
+  const wti = hist["DCOILWTICO"];
+  let signal = "neutral";
+  let signalReason = "";
+  const vixVal = vix && vix.latest ? vix.latest.value : null;
+  const hyVal = hy && hy.latest ? hy.latest.value : null;
+  if (vixVal != null && hyVal != null) {
+    if (vixVal < 16 && hyVal < 3.5) {
+      signal = "risk-on"; signalReason = `VIX ${fmt(vixVal,1)} thấp + HY spread ${fmt(hyVal,2)}% hẹp → complacency/risk-on`;
+    } else if (vixVal > 22 || hyVal > 5) {
+      signal = "risk-off"; signalReason = `VIX ${fmt(vixVal,1)} cao hoặc HY spread ${fmt(hyVal,2)}% rộng → stress`;
+    } else {
+      signalReason = `VIX ${fmt(vixVal,1)}, HY ${fmt(hyVal,2)}% — vùng trung tính`;
+    }
+  }
+
+  const signalColor = signal === "risk-on" ? "#4ade80" : signal === "risk-off" ? "#f87171" : "#8b96a3";
+
+  const cards = CROSS_ASSET_LAYOUT.map(item => {
+    let value, change, history, latestDate, unit, clickKey, clickType;
+    if (item.type === "fred") {
+      const s = hist[item.key];
+      if (!s || !s.latest) return `<div class="card"><div class="kpi-label">${item.label}</div><div class="empty">—</div></div>`;
+      value = s.latest.value;
+      change = s.change_pct;
+      latestDate = s.latest.date;
+      history = (s.history || []).slice(-126); // last ~6 months daily
+      clickKey = item.key; clickType = "fred";
+    } else {
+      const a = assets[item.key];
+      if (!a) return `<div class="card"><div class="kpi-label">${item.label}</div><div class="empty">—</div></div>`;
+      value = a.latest;
+      change = a.ret_1d;
+      latestDate = a.latest_date;
+      history = (a.history || []).slice(-126);
+      clickKey = item.key; clickType = "asset";
+    }
+    const deltaCls = change > 0 ? "up" : change < 0 ? "down" : "flat";
+    const ret1m = item.type === "asset" ? assets[item.key]?.ret_1m : null;
+    const ret1mTxt = ret1m != null ? `<span style="color: var(--muted); font-size: 11px;"> · 1M ${fmtRet(ret1m)}</span>` : "";
+
+    return `<div class="card clickable" data-cross-key="${clickKey}" data-cross-type="${clickType}">
+      <div class="kpi-label">${item.label} <span class="info-icon" title="Xem giải thích">i</span></div>
+      <div class="kpi-value">${fmt(value, 2)}</div>
+      <div class="kpi-delta ${deltaCls}">${change != null ? fmtPct(change, 2) : ""}${ret1mTxt} <span style="color: var(--muted)">· ${latestDate || ""}</span></div>
+      <div class="chart-box" style="height: 90px; margin-top: 6px;"><canvas id="ca-spark-${item.key.replace(/[^a-zA-Z0-9]/g, '_')}"></canvas></div>
+    </div>`;
+  }).join("");
+
+  el.innerHTML = `
+    <div style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+      <span class="pill" style="background: ${signalColor}22; color: ${signalColor}; font-weight: 600;">Signal: ${signal.toUpperCase()}</span>
+      <span style="color: var(--muted); font-size: 12px;">${signalReason}</span>
+    </div>
+    <div class="grid grid-3">${cards}</div>
+  `;
+
+  // Render sparklines
+  CROSS_ASSET_LAYOUT.forEach(item => {
+    let history;
+    if (item.type === "fred") {
+      const s = hist[item.key];
+      history = s && s.history ? s.history.slice(-126) : null;
+    } else {
+      const a = assets[item.key];
+      history = a && a.history ? a.history.slice(-126) : null;
+    }
+    if (!history || !history.length) return;
+    const canvasId = "ca-spark-" + item.key.replace(/[^a-zA-Z0-9]/g, '_');
+    const ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+    new Chart(ctx, buildAssetSparkline(history, item.color));
+  });
+
+  // Click handler → modal
+  el.querySelectorAll(".clickable").forEach(card => {
+    card.addEventListener("click", () => {
+      const key = card.dataset.crossKey;
+      const type = card.dataset.crossType;
+      if (type === "fred") {
+        const s = hist[key] || {};
+        openModal({ fredId: key, latest: s.latest, change: s.change_pct });
+      } else {
+        openCrossAssetModal(key);
+      }
+    });
+  });
+})();
+
+function openCrossAssetModal(ticker) {
+  const meta = INDICATORS.byCrossAssetTicker && INDICATORS.byCrossAssetTicker[ticker];
+  const data = ((D.cross_asset || {}).assets || {})[ticker];
+  const body = document.getElementById("modal-body");
+  if (!meta) {
+    body.innerHTML = `<h3>${ticker}</h3><div class="modal-empty">Chưa có metadata.</div>`;
+  } else {
+    const metaParts = [];
+    if (meta.unit) metaParts.push(meta.unit);
+    if (meta.ticker) metaParts.push("Yahoo: " + meta.ticker);
+    let valueLine = "";
+    if (data) {
+      valueLine = `<div class="modal-section"><div class="label">Giá trị mới nhất</div>
+        <div class="body"><strong>${fmt(data.latest, 2)}</strong> · 1D ${fmtRet(data.ret_1d)} · 1W ${fmtRet(data.ret_1w)} · 1M ${fmtRet(data.ret_1m)} · 3M ${fmtRet(data.ret_3m)} · YTD ${fmtRet(data.ret_ytd)} · 1Y ${fmtRet(data.ret_1y)}
+          <span style="color: var(--muted)"> · ${data.latest_date}</span></div></div>`;
+    }
+    body.innerHTML = `
+      <h3>${meta.name}</h3>
+      <div class="modal-meta">${metaParts.join(" · ")}</div>
+      ${valueLine}
+      <div class="modal-section"><div class="label">Asset gì?</div><div class="body">${meta.what}</div></div>
+      <div class="modal-section"><div class="label">Macro drivers</div><div class="body">${meta.drivers}</div></div>
+      <div class="modal-section up"><div class="label">Hưởng lợi khi</div><div class="body">${meta.thrives_when}</div></div>
+      <div class="modal-section down"><div class="label">Chịu áp lực khi</div><div class="body">${meta.struggles_when}</div></div>
+      <div class="modal-section"><div class="label">Sector signal</div><div class="body">${meta.sector_signal}</div></div>
+    `;
+  }
+  document.getElementById("modal-overlay").classList.add("open");
+}
+
+// === Sector rotation ===
+// Color palette for 11 sectors (distinct, accessible on dark bg)
+const SECTOR_COLORS = {
+  XLK: "#60a5fa",  // blue — tech
+  XLF: "#fbbf24",  // amber — financials
+  XLE: "#f59e0b",  // dark amber — energy
+  XLV: "#a78bfa",  // purple — healthcare
+  XLY: "#f472b6",  // pink — discretionary
+  XLP: "#34d399",  // green — staples
+  XLI: "#fb923c",  // orange — industrials
+  XLB: "#facc15",  // yellow — materials
+  XLU: "#22d3ee",  // cyan — utilities
+  XLRE: "#94a3b8", // slate — REITs
+  XLC: "#c084fc",  // violet — communications
+};
+
+function heatClass(pct) {
+  if (pct == null || isNaN(pct)) return "heat-zero";
+  if (pct >= 5) return "heat-pos-3";
+  if (pct >= 2) return "heat-pos-2";
+  if (pct > 0) return "heat-pos-1";
+  if (pct <= -5) return "heat-neg-3";
+  if (pct <= -2) return "heat-neg-2";
+  if (pct < 0) return "heat-neg-1";
+  return "heat-zero";
+}
+
+function fmtRet(v) {
+  if (v == null || isNaN(v)) return "—";
+  return (v >= 0 ? "+" : "") + fmt(v, 2) + "%";
+}
+
+(function renderSectors() {
+  const el = document.getElementById("sectors-section");
+  const sectorsData = (D.sectors && D.sectors.sectors) || {};
+  const benchmark = (D.sectors && D.sectors.benchmark) || {};
+  const sectorList = Object.values(sectorsData);
+  if (!sectorList.length) {
+    el.innerHTML = `<div class="empty">Chưa có sector data. Chạy <code>python scripts/fetch_sectors.py</code> rồi rebuild dashboard.</div>`;
+    return;
+  }
+
+  // ---- Absolute return heatmap (left) ----
+  const sortedAbs = [...sectorList].sort((a, b) => (b.ret_1m ?? -999) - (a.ret_1m ?? -999));
+  const absRows = sortedAbs.map(s => `
+    <tr class="clickable" data-ticker="${s.ticker}">
+      <td><span class="ticker">${s.ticker}</span>${s.name}</td>
+      <td><span class="ret-cell ${heatClass(s.ret_1w)}">${fmtRet(s.ret_1w)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.ret_1m)}">${fmtRet(s.ret_1m)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.ret_3m)}">${fmtRet(s.ret_3m)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.ret_ytd)}">${fmtRet(s.ret_ytd)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.ret_1y)}">${fmtRet(s.ret_1y)}</span></td>
+    </tr>`).join("");
+
+  // ---- Relative Strength vs SPY (right) ----
+  const sortedRS = [...sectorList].sort((a, b) => (b.rs_1m ?? -999) - (a.rs_1m ?? -999));
+  const rsRows = sortedRS.map(s => `
+    <tr class="clickable" data-ticker="${s.ticker}">
+      <td><span class="ticker">${s.ticker}</span>${s.name}</td>
+      <td><span class="ret-cell ${heatClass(s.rs_1w)}">${fmtRet(s.rs_1w)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.rs_1m)}">${fmtRet(s.rs_1m)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.rs_3m)}">${fmtRet(s.rs_3m)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.rs_ytd)}">${fmtRet(s.rs_ytd)}</span></td>
+      <td><span class="ret-cell ${heatClass(s.rs_1y)}">${fmtRet(s.rs_1y)}</span></td>
+    </tr>`).join("");
+
+  el.innerHTML = `
+    <div style="color: var(--muted); font-size: 12px; margin-bottom: 12px;">
+      Latest: ${sortedAbs[0] && sortedAbs[0].latest_date ? sortedAbs[0].latest_date : "—"} ·
+      Benchmark SPY: ${benchmark.latest ? "$" + fmt(benchmark.latest, 2) : "—"}
+      ${benchmark.ret_1m != null ? `(${fmtRet(benchmark.ret_1m)} 1M)` : ""}
+      · Click vào sector để xem giải thích
+    </div>
+    <div class="sector-grid">
+      <div class="card">
+        <div class="kpi-label" style="margin-bottom: 10px;">Absolute returns</div>
+        <table class="sector-table">
+          <thead><tr><th>Sector</th><th>1W</th><th>1M</th><th>3M</th><th>YTD</th><th>1Y</th></tr></thead>
+          <tbody>${absRows}</tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="kpi-label" style="margin-bottom: 10px;">Relative Strength vs SPY</div>
+        <table class="sector-table">
+          <thead><tr><th>Sector</th><th>1W</th><th>1M</th><th>3M</th><th>YTD</th><th>1Y</th></tr></thead>
+          <tbody>${rsRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sector-rs-chart-wrap" style="margin-top: 16px;">
+      <div class="kpi-label" style="margin-bottom: 8px;">RS vs SPY — 1 năm gần đây (100 = không thay đổi)</div>
+      <div class="rs-chart-box"><canvas id="rs-chart"></canvas></div>
+      <div class="legend-grid" id="rs-legend"></div>
+    </div>
+  `;
+
+  // ---- Click handlers on rows → sector modal ----
+  el.querySelectorAll("tr.clickable").forEach(tr => {
+    tr.addEventListener("click", () => openSectorModal(tr.dataset.ticker));
+  });
+
+  // ---- RS chart with all 11 sectors ----
+  // Get union of dates
+  const allDates = new Set();
+  sectorList.forEach(s => (s.rs_history || []).forEach(p => allDates.add(p.date)));
+  const labels = Array.from(allDates).sort();
+
+  const datasets = sectorList.map(s => {
+    const map = {};
+    (s.rs_history || []).forEach(p => { map[p.date] = p.value; });
+    return {
+      label: s.ticker,
+      data: labels.map(d => map[d] ?? null),
+      borderColor: SECTOR_COLORS[s.ticker] || "#999",
+      backgroundColor: "transparent",
+      borderWidth: 1.3,
+      pointRadius: 0,
+      tension: 0.2,
+      spanGaps: true,
+      hidden: false,
+    };
+  });
+
+  // 100 baseline (no-change reference)
+  datasets.push({
+    label: "Baseline (no change)",
+    data: labels.map(() => 100),
+    borderColor: "rgba(255,255,255,0.25)",
+    borderDash: [4, 4],
+    borderWidth: 1,
+    pointRadius: 0,
+    fill: false,
+    _baseline: true,
+  });
+
+  const rsChart = new Chart(document.getElementById("rs-chart"), {
+    type: "line",
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.dataset.label}: ${fmt(ctx.parsed.y, 1)}`,
+          },
+        },
+      },
+      scales: {
+        x: { ticks: { color: "#8b96a3", maxTicksLimit: 8, font: { size: 10 } }, grid: { display: false } },
+        y: { ticks: { color: "#8b96a3", font: { size: 10 } }, grid: { color: "rgba(255,255,255,0.05)" } },
+      },
+    },
+  });
+
+  // Custom legend with click-to-toggle
+  const legendEl = document.getElementById("rs-legend");
+  legendEl.innerHTML = sectorList.map(s => `
+    <div class="legend-item" data-ticker="${s.ticker}">
+      <div class="legend-swatch" style="background: ${SECTOR_COLORS[s.ticker]}"></div>
+      <span><strong>${s.ticker}</strong> ${s.name}</span>
+    </div>`).join("");
+  legendEl.querySelectorAll(".legend-item").forEach(item => {
+    item.addEventListener("click", () => {
+      const ticker = item.dataset.ticker;
+      const ds = rsChart.data.datasets.find(d => d.label === ticker);
+      if (!ds) return;
+      ds.hidden = !ds.hidden;
+      item.classList.toggle("hidden", ds.hidden);
+      rsChart.update();
+    });
+  });
+})();
+
+// Sub-industry momentum drill-down for the monthly tab. Reads the cap-weighted
+// 1M contribution baked into D.sectors by fetch_sectors.build_sub_industry_momentum.
+let sectorMomentumMetric = "ret"; // 'ret' = lợi suất tuyệt đối | 'rs' = RS vs SPY — nhớ giữa các lần render
+function renderSectorMomentum(el) {
+  const S = (D.sectors && D.sectors.sectors) || {};
+  const summary = (D.sectors && D.sectors.momentum_summary) || {};
+  const sectors = Object.values(S).filter(s => s.sub_industry_momentum && s.sub_industry_momentum.sub_industries.length);
+  if (!sectors.length) {
+    el.innerHTML = `<div class="empty" style="margin-top:12px;">Chưa có dữ liệu động lực sub-industry. Chạy <code>python scripts/fetch_ticker_meta.py</code> + <code>fetch_sectors.py</code> rồi rebuild dashboard.</div>`;
+    return;
+  }
+  let drill = null;
+  const maxAbs = arr => Math.max(...arr.map(x => Math.abs(x || 0)), 0.0001);
+  const sign = v => (v >= 0 ? "+" : "");
+  // Field selectors theo metric đang chọn
+  const M = () => sectorMomentumMetric === "rs"
+    ? { total: "total_rs_pp", contrib: "contribution_rs_pp", stock: "rs_1m", pct: "pct_of_universe_rs",
+        label: "RS vs SPY 1M", unit: "pp RS" }
+    : { total: "total_pp", contrib: "contribution_pp", stock: "ret_1m", pct: "pct_of_universe",
+        label: "Lợi suất tuyệt đối 1M", unit: "pp" };
+
+  function toggleHtml() {
+    const opt = (k, txt) => `<span class="mom-tog${sectorMomentumMetric === k ? " on" : ""}" data-metric="${k}">${txt}</span>`;
+    return `<div class="mom-toggle">Thước đo: ${opt("ret", "Lợi suất")} ${opt("rs", "RS vs SPY")}</div>`;
+  }
+  function wireToggle() {
+    el.querySelectorAll(".mom-tog").forEach(t => t.addEventListener("click", () => {
+      if (sectorMomentumMetric === t.dataset.metric) return;
+      sectorMomentumMetric = t.dataset.metric;
+      drill ? renderDrill() : renderList();
+    }));
+  }
+
+  function bar(value, scale, label, right) {
+    const w = Math.min(Math.abs(value) / scale * 50, 50);
+    const pos = value >= 0;
+    return `<div class="mom-row">
+      <div class="mom-label">${label}</div>
+      <div class="mom-track">
+        <div class="mom-mid"></div>
+        <div class="mom-fill ${pos ? "pos" : "neg"}" style="width:${w}%; ${pos ? "left:50%" : `right:50%`};"></div>
+      </div>
+      <div class="mom-val ${pos ? "pos" : "neg"}">${right}</div>
+    </div>`;
+  }
+
+  function renderList() {
+    const f = M();
+    const sorted = [...sectors].sort((a, b) => b.sub_industry_momentum[f.total] - a.sub_industry_momentum[f.total]);
+    const scale = maxAbs(sorted.map(s => s.sub_industry_momentum[f.total]));
+    const rows = sorted.map(s => {
+      const m = s.sub_industry_momentum;
+      const v = m[f.total];
+      return `<div class="mom-click" data-ticker="${s.ticker}">
+        ${bar(v, scale, `<span class="ticker">${s.ticker}</span>${s.name}`, `${sign(v)}${v.toFixed(2)}${f.unit === "pp" ? "pp" : "pp"}`)}
+        <div class="mom-sub-note">${m[f.pct]}% của biến động · ▸ click xem sub-industry</div>
+      </div>`;
+    }).join("");
+    el.innerHTML = `<div class="mom-head">Động lực bên trong theo nhóm ngành · ${f.label} <span class="muted">(cap-weighted)</span></div>
+      ${toggleHtml()}
+      <div class="mom-list">${rows}</div>
+      ${summary.note ? `<div class="mom-foot">${summary.note}</div>` : ""}`;
+    wireToggle();
+    el.querySelectorAll(".mom-click").forEach(n =>
+      n.addEventListener("click", () => { drill = n.dataset.ticker; renderDrill(); }));
+  }
+
+  function renderDrill() {
+    const f = M();
+    const s = S[drill];
+    const m = s.sub_industry_momentum;
+    const subs = [...m.sub_industries].sort((a, b) => b[f.contrib] - a[f.contrib]);
+    const scale = maxAbs(subs.map(g => g[f.contrib]));
+    const subRows = subs.map(g => {
+      const stocks = [...g.stocks].sort((a, b) => b[f.contrib] - a[f.contrib]);
+      const chips = stocks.map(st =>
+        `<span class="mom-chip ${st[f.contrib] >= 0 ? "pos" : "neg"}">${st.ticker} ${sign(st[f.stock])}${(st[f.stock] ?? 0).toFixed(1)}%</span>`).join("");
+      const v = g[f.contrib];
+      return `<div class="mom-group">
+        ${bar(v, scale, g.industry, `${sign(v)}${v.toFixed(2)}pp`)}
+        <div class="mom-chips">${chips}</div>
+      </div>`;
+    }).join("");
+    const tot = m[f.total];
+    el.innerHTML = `<div class="mom-head"><span class="mom-back">← Quay lại</span> · <strong>${s.name}</strong>
+        <span class="ticker">${s.ticker}</span> · ${f.label} · tổng ${sign(tot)}${tot.toFixed(2)}pp · ${m[f.pct]}% của biến động</div>
+      ${toggleHtml()}
+      <div class="mom-list">${subRows}</div>`;
+    wireToggle();
+    el.querySelector(".mom-back").addEventListener("click", () => { drill = null; renderList(); });
+  }
+
+  renderList();
+}
+
+function openSectorModal(ticker) {
+  const sectorMeta = INDICATORS.bySectorTicker && INDICATORS.bySectorTicker[ticker];
+  const sectorData = ((D.sectors || {}).sectors || {})[ticker];
+  const body = document.getElementById("modal-body");
+  if (!sectorMeta) {
+    body.innerHTML = `<h3>${ticker}</h3><div class="modal-empty">Chưa có metadata cho sector này.</div>`;
+    document.getElementById("modal-overlay").classList.add("open");
+    return;
+  }
+
+  // Performance block
+  let perfBlock = "";
+  if (sectorData) {
+    const rows = [
+      ["1 tuần", sectorData.ret_1w, sectorData.rs_1w],
+      ["1 tháng", sectorData.ret_1m, sectorData.rs_1m],
+      ["3 tháng", sectorData.ret_3m, sectorData.rs_3m],
+      ["YTD", sectorData.ret_ytd, sectorData.rs_ytd],
+      ["1 năm", sectorData.ret_1y, sectorData.rs_1y],
+    ];
+    perfBlock = `
+      <div class="modal-section">
+        <div class="label">Hiệu suất hiện tại</div>
+        <table class="sector-table" style="margin-top:6px;">
+          <thead><tr><th>Khung TG</th><th>Absolute</th><th>vs SPY (RS)</th></tr></thead>
+          <tbody>
+            ${rows.map(r => `<tr>
+              <td>${r[0]}</td>
+              <td><span class="ret-cell ${heatClass(r[1])}">${fmtRet(r[1])}</span></td>
+              <td><span class="ret-cell ${heatClass(r[2])}">${fmtRet(r[2])}</span></td>
+            </tr>`).join("")}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  body.innerHTML = `
+    <h3>${sectorMeta.name}</h3>
+    <div class="modal-meta">ETF: ${sectorMeta.etf} · Trọng số S&P 500: ${sectorMeta.weight_sp500}</div>
+    ${perfBlock}
+    <div class="modal-section"><div class="label">Holdings chính</div><div class="body">${sectorMeta.top_holdings}</div></div>
+    <div class="modal-section"><div class="label">Sector bao gồm gì?</div><div class="body">${sectorMeta.what}</div></div>
+    <div class="modal-section"><div class="label">Macro drivers</div><div class="body">${sectorMeta.macro_drivers}</div></div>
+    <div class="modal-section up"><div class="label">Hưởng lợi khi</div><div class="body">${sectorMeta.thrives_when}</div></div>
+    <div class="modal-section down"><div class="label">Chịu áp lực khi</div><div class="body">${sectorMeta.struggles_when}</div></div>
+    <div class="modal-section"><div class="label">Tín hiệu cần theo dõi</div><div class="body">${sectorMeta.key_signals}</div></div>
+  `;
+  document.getElementById("modal-overlay").classList.add("open");
+}
+
+// === Calendar (Catalysts) ===
+(function renderCalendar() {
+  const el = document.getElementById("calendar-section");
+  const cal = D.calendar || {};
+  const macro = cal.macro || [];
+  const earnings = cal.earnings || [];
+  if (!macro.length && !earnings.length) {
+    el.innerHTML = `<div class="empty">Chưa có calendar. Chạy <code>python scripts/fetch_calendar.py</code>.</div>`;
+    return;
+  }
+
+  // Group by date
+  const byDate = {};
+  for (const e of macro) {
+    (byDate[e.date] = byDate[e.date] || []).push({ ...e, kind: "macro" });
+  }
+  for (const e of earnings) {
+    (byDate[e.date] = byDate[e.date] || []).push({ ...e, kind: "earnings" });
+  }
+  const sortedDates = Object.keys(byDate).sort();
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  const weekdayNames = ["CN", "Hai", "Ba", "Tư", "Năm", "Sáu", "Bảy"];
+
+  el.innerHTML = `
+    <div style="color: var(--muted); font-size: 12px; margin-bottom: 12px;">
+      ${earnings.length} earnings + ${macro.length} macro releases · Cửa sổ: ${cal.window_start || "—"} → ${cal.window_end || "—"}
+      · <span style="color: var(--amber, #fbbf24);">Macro dates là ước tính dựa trên cadence lịch sử.</span>
+    </div>
+    ${sortedDates.map(date => {
+      const dt = new Date(date);
+      const wd = weekdayNames[dt.getDay()];
+      const isToday = date === today;
+      const events = byDate[date];
+      return `
+      <div class="cal-day" ${isToday ? 'style="border-color: var(--blue);"' : ""}>
+        <div class="cal-day-header">
+          <span class="cal-date">${date}${isToday ? ' <span style="color: var(--blue); font-size: 11px;">— hôm nay</span>' : ""}</span>
+          <span class="cal-weekday">Thứ ${wd}</span>
+        </div>
+        <div class="cal-events">
+          ${events.map(e => {
+            if (e.kind === "earnings") {
+              return `<div class="cal-event earnings">
+                <span class="cal-tag">Earnings</span>
+                <strong>${e.ticker}</strong>
+                <span style="color: var(--muted);">${e.name}</span>
+                <span class="cal-sector">[${e.sector_etf}]</span>
+              </div>`;
+            }
+            return `<div class="cal-event macro">
+              <span class="cal-tag">Macro</span>
+              <span>${e.name}</span>
+              ${e.estimated ? '<span class="cal-est" title="Chưa có nguồn lịch chính thức">(ước tính)</span>' : ""}
+            </div>`;
+          }).join("")}
+        </div>
+      </div>`;
+    }).join("")}
+  `;
+})();
+
+// === Reports list & Dashboard Switching ===
+window.selectDashboardReport = function(kind, file) {
+  const list = kind === 'daily' ? D.daily_reports : D.monthly_reports;
+  const report = (list || []).find(r => r.file === file);
+  if (!report) return;
+
+  if (kind === 'daily') {
+    window.currentDailyReport = report;
+    // Update daily tab button label if it exists
+    const dailyBtn = document.querySelector("#insights-section .tab[data-tab='daily']");
+    if (dailyBtn) {
+      dailyBtn.textContent = `Daily — ${report.date}`;
+    }
+    // Switch active tab to daily
+    const tabs = document.querySelectorAll("#insights-section .tab");
+    tabs.forEach(t => {
+      if (t.dataset.tab === 'daily') t.classList.add("active");
+      else t.classList.remove("active");
+    });
+    window.showReportInDashboard(report, 'daily');
+
+    // Also update "Chỉ số công bố trong ngày"
+    if (window.renderReleases) {
+      window.renderReleases(report.date);
+    }
+  } else {
+    window.currentMonthlyReport = report;
+    // Update monthly tab button label if it exists
+    const monthlyBtn = document.querySelector("#insights-section .tab[data-tab='monthly']");
+    if (monthlyBtn) {
+      monthlyBtn.textContent = `Tháng — ${report.month || report.date}`;
+    }
+    // Switch active tab to monthly
+    const tabs = document.querySelectorAll("#insights-section .tab");
+    tabs.forEach(t => {
+      if (t.dataset.tab === 'monthly') t.classList.add("active");
+      else t.classList.remove("active");
+    });
+    window.showReportInDashboard(report, 'monthly');
+  }
+
+  // Smooth scroll to the insights section
+  const insightsSection = document.getElementById("insights-section");
+  if (insightsSection) {
+    insightsSection.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+// === Report search (top of page) — searches ALL daily reports ===
+(function reportSearch() {
+  const input = document.getElementById("report-search-input");
+  const clearBtn = document.getElementById("report-search-clear");
+  const resultsEl = document.getElementById("report-search-results");
+  if (!input || !resultsEl) return;
+
+  const allDaily = (D.daily_reports || []).slice().reverse(); // mới nhất trước
+
+  // Bỏ dấu tiếng Việt + lowercase → gõ "lam phat" vẫn khớp "Lạm Phát"
+  const normalize = (s) => (s || "").toString().normalize("NFD")
+    .replace(/[̀-ͯ]/g, "").replace(/[đĐ]/g, "d").toLowerCase().trim();
+
+  // Gom text search được của mỗi báo cáo (ngày + regime + takeaway + body)
+  const indexed = allDaily.map(r => ({
+    report: r,
+    hay: normalize([r.date, r.regime_signal, r.key_takeaway, r.body_preview, r.body].filter(Boolean).join(" ")),
+  }));
+
+  const esc = (s) => (s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  function render(q) {
+    const nq = normalize(q);
+    if (!nq) { resultsEl.classList.remove("open"); resultsEl.innerHTML = ""; return; }
+    const hits = indexed.filter(x => x.hay.includes(nq)).slice(0, 25);
+    if (!hits.length) {
+      resultsEl.innerHTML = `<div class="rs-empty">Không tìm thấy báo cáo nào khớp "<strong>${esc(q)}</strong>".</div>`;
+      resultsEl.classList.add("open");
+      return;
+    }
+    let html = `<div class="rs-count">${hits.length} kết quả${hits.length === 25 ? "+" : ""}</div>`;
+    html += hits.map(x => {
+      const r = x.report;
+      const pill = r.regime_signal ? `<span class="pill ${r.regime_signal}">${r.regime_signal}</span>` : "";
+      return `<div class="rs-result" data-file="${esc(r.file)}">
+        <span class="rs-date">${esc(r.date)}</span>
+        ${pill}
+        <span class="rs-take">${esc(r.key_takeaway || r.body_preview || "")}</span>
+      </div>`;
+    }).join("");
+    resultsEl.innerHTML = html;
+    resultsEl.classList.add("open");
+
+    resultsEl.querySelectorAll(".rs-result").forEach(elr => {
+      elr.addEventListener("click", () => {
+        window.selectDashboardReport("daily", elr.dataset.file);
+        resultsEl.classList.remove("open");
+      });
+    });
+  }
+
+  input.addEventListener("input", (e) => {
+    clearBtn.style.display = e.target.value ? "block" : "none";
+    render(e.target.value);
+  });
+  clearBtn.addEventListener("click", () => {
+    input.value = ""; clearBtn.style.display = "none";
+    resultsEl.classList.remove("open"); resultsEl.innerHTML = ""; input.focus();
+  });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      input.value = ""; clearBtn.style.display = "none";
+      resultsEl.classList.remove("open"); resultsEl.innerHTML = "";
+    }
+  });
+  // Click ra ngoài thì đóng kết quả
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".report-search")) resultsEl.classList.remove("open");
+  });
+  input.addEventListener("focus", () => { if (input.value) render(input.value); });
+})();
 </script>
 </body>
 </html>
