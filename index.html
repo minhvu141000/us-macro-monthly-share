@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Báo cáo Vĩ mô Mỹ — Tháng</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  :root{--bg:#0b1220;--card:#111a2e;--card2:#0f1729;--bd:#1e2b45;--tx:#e5edf7;--mut:#8ba0bd;--acc:#4ade80;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:24px 18px 80px}
+  .hero{background:linear-gradient(160deg,#132241,#0d1729);border:1px solid var(--bd);border-radius:16px;padding:24px;margin-bottom:20px}
+  .hero h1{margin:0 0 4px;font-size:26px}
+  .sub{color:var(--mut);font-size:13px;margin-bottom:14px}
+  .takeaway{background:#0b1526;border-left:4px solid var(--acc);border-radius:8px;padding:12px 14px;color:#cfe0f5;font-size:14px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .badge{font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;border:1px solid var(--bd);background:#0e1a30}
+  .badge b{color:var(--mut);font-weight:500;margin-right:5px}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-bottom:20px}
+  .card h2.section-t{margin:0 0 14px;font-size:16px;color:var(--acc)}
+  .chart-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:12px;color:var(--mut)}
+  .chart-legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .report h1{font-size:22px;border-bottom:1px solid var(--bd);padding-bottom:8px;margin-top:8px}
+  .report h2{font-size:18px;margin-top:28px;color:#dfeaf8}
+  .report h3{font-size:15px;margin-top:20px;color:var(--mut)}
+  .report table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+  .report th,.report td{border:1px solid var(--bd);padding:7px 9px;text-align:left}
+  .report th{background:#0e1a30;color:#bcd0ec}
+  .report tr:nth-child(even) td{background:#0d1526}
+  .report blockquote{border-left:3px solid var(--mut);margin:12px 0;padding:6px 14px;color:var(--mut);background:#0c1424;border-radius:6px}
+  .report code{background:#0c1424;padding:2px 6px;border-radius:5px;font-size:12px}
+  .report hr{border:0;border-top:1px solid var(--bd);margin:22px 0}
+  .report a{color:var(--acc)}
+  .foot{color:var(--mut);font-size:12px;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1 id="hero-title">Báo cáo Vĩ mô Mỹ</h1>
+    <div class="sub" id="hero-sub"></div>
+    <div class="takeaway" id="hero-takeaway"></div>
+    <div class="badges" id="hero-badges"></div>
+  </div>
+
+  <div class="card" id="rot-card">
+    <h2 class="section-t" id="rot-title">Dự báo luân chuyển dòng tiền</h2>
+    <canvas id="rotChart" height="300"></canvas>
+    <div class="chart-legend" id="rot-legend"></div>
+  </div>
+
+  <div class="card report" id="report"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script type="application/json" id="payload">{"month": "2026-06", "fm": {"month": "2026-06", "key_takeaway": "No-landing tháng 6: growth beat trên diện rộng (NFP +172k, Retail +0.9%, GDP Q1 rev 2.1%, ISM Mfg 54.0) nhưng lạm phát hard-data còn nóng (CPI 4.2%, Core PCE 3.4%) khiến Fed hawkish-hold (dot plot dịch LÊN). Dòng tiền rời XLK (-8.8% 1M) sang XLV/XLF/XLI khi AI capex bị thử thách và curve giữ dương +0.30.", "regime": "expansion", "fed_stance": "hawkish", "economic_health": "strong"}, "body": "\n# Vĩ mô Mỹ — 2026-06\n\n## Sức khoẻ tổng thể: **strong (no-landing)**\n\n| Nhóm | Verdict | Xu hướng |\n|---|---|---|\n| Lạm phát | 🟡 STICKY | → đi ngang (hard-data nóng, PPI/PCE chưa hạ) |\n| Lao động | 🟢 MẠNH | → chặt (JOLTS 7.59M beat, NFP +172k) |\n| Tăng trưởng | 🟢 TĂNG | → vững (ISM >54, Retail bùng nổ) |\n| Niềm tin & Tiêu dùng | 🟡 HỖN HỢP | ↑ sentiment hồi nhưng <50, CB Conf hụt |\n| Nhà ở | 🔴 NGUỘI | ↓ Starts -15.4%, New Home Sales -7.3% |\n| Fed & Lãi suất | 🔴 HAWKISH | dot plot dịch LÊN, hold 3.75% |\n\n**Tháng 6 là \"no-landing\": kinh tế thực quá khỏe để Fed vội cắt, lạm phát nền còn nóng — hawkish hold đè định giá tech, dòng tiền xoay sang defensives/financials/cyclicals.**\n\n---\n\n## 1. Lạm phát — 🟡 STICKY\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 10/06 | Core CPI (MoM) | +0.2% | +0.3% | ↓ | 🟢 Cool |\n| 10/06 | Core CPI (YoY) | +2.9% | +2.9% | ↑ +0.10pp | 🟡 Inline |\n| 10/06 | CPI (MoM) | +0.5% | +0.5% | ↓ | 🟡 Inline |\n| 10/06 | CPI (YoY) | +4.2% | +4.2% | ↑ +0.40pp | 🟡 Inline |\n| 11/06 | Core PPI (MoM) | +0.4% | +0.5% | ↓ | 🟢 Cool |\n| 11/06 | Core PPI (YoY) | +4.9% | +5.4% | → | 🟢 Cool |\n| 11/06 | PPI (MoM) | +1.1% | +0.7% | → | 🔴 Nóng |\n| 11/06 | PPI (YoY) | +6.5% | +6.4% | ↑ +0.80pp | 🟡 Inline |\n\n**Kết luận:** Core CPI/PPI MoM hạ nhiệt (0.2% / 0.4%) cứu narrative disinflation giữa tháng, nhưng headline vẫn dai — CPI YoY 4.2% (cách mục tiêu 2% còn +2.2pp), Core PCE YoY nhích lên 3.4%, PPI headline +1.1% MoM nóng. Đây là \"sticky, không phải cooling\" — soft-data dovish nhưng hard-data chưa xác nhận.\n\n---\n\n## 2. Lao động — 🟢 MẠNH\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 02/06 | JOLTS Job Openings | 7.62M | 6.86M | ↑ | 🟢 Tốt |\n| 03/06 | ADP Nonfarm Employment | +122k | +118k | ↑ | 🟢 Tốt |\n| 04/06 | Initial Jobless Claims | 225k | 214k | ↑ | 🔴 Nóng |\n| 05/06 | Nonfarm Payrolls | +172k | +85k | ↓ | 🟢 Tốt |\n| 05/06 | Private Nonfarm Payrolls | +120k | +85k | ↓ | 🟢 Tốt |\n| 05/06 | Unemployment Rate | 4.3% | 4.3% | → | 🟡 Inline |\n| 05/06 | Average Hourly Earnings (YoY) | +3.4% | +3.4% | ↓ -0.20pp | 🟡 Inline |\n| 11/06 | Initial Jobless Claims | 229k | 220k | ↑ | 🔴 Nóng |\n| 18/06 | Initial Jobless Claims | 226k | 225k | ↓ | 🟡 Inline |\n| 25/06 | Initial Jobless Claims | 215k | 225k | ↓ | 🟢 Cool |\n| 30/06 | JOLTS Job Openings | 7.59M | 7.28M | ↑ | 🟢 Tốt |\n\n**Kết luận:** NFP +172k gấp đôi dự báo + JOLTS 7.6M beat mạnh hai đầu tháng xóa lo hạ cánh cứng; claims dao động 215-229k (cooling nhẹ nhưng chưa breakout). Sahm Rule +0.10 — CHƯA kích hoạt (ngưỡng 0.50), thất nghiệp 3mo-avg 4.3% vs đáy 4.2%; lao động vẫn chặt, AHE +3.4% giảm nhẹ giảm áp lực lương.\n\n---\n\n## 3. Tăng trưởng — 🟢 TĂNG\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 01/06 | ISM Manufacturing PMI | 54.0 | 53.3 | ↑ | 🟢 Tốt |\n| 01/06 | ISM Manufacturing Prices | 82.1 | 85.3 | ↓ | 🟢 Cool |\n| 03/06 | ISM Non-Mfg (Services) PMI | 54.5 | 53.7 | ↑ | 🟢 Tốt |\n| 03/06 | ISM Services New Orders | 57.3 | 53.4 | ↑ | 🟢 Tốt |\n| 03/06 | ISM Services Prices | 71.3 | 72.3 | ↑ | 🟡 Sticky |\n| 03/06 | Factory Orders (MoM) | +4.8% | +4.6% | ↑ | 🟢 Tốt |\n| 17/06 | Retail Sales (MoM) | +0.9% | +0.5% | ↑ | 🟢 Tốt |\n| 17/06 | Retail Control (MoM) | +0.7% | +0.4% | ↑ | 🟢 Tốt |\n| 18/06 | Philadelphia Fed Mfg | 10.3 | 9.8 | ↑ | 🟢 Tốt |\n| 23/06 | S&P Global Mfg PMI | 55.7 | 54.6 | ↑ | 🟢 Tốt |\n| 23/06 | Richmond Manufacturing | 4 | 8 | ↓ | 🔴 Yếu |\n| 25/06 | GDP Q1 (QoQ ann., rev) | +2.1% | +1.6% | ↑ | 🟢 Tốt |\n| 25/06 | Core Durable Goods (MoM) | +1.3% | +0.5% | ↑ | 🟢 Tốt |\n| 25/06 | Goods Orders Non-Def Ex-Air | +1.6% | +0.6% | ↑ | 🟢 Tốt |\n| 30/06 | Chicago PMI | 56.7 | 55.7 | ↓ -6.0pp | 🟡 Inline |\n\n**Kết luận:** Cả Mfg (ISM 54.0) lẫn Services (54.5) mở rộng vững >54, Retail Sales +0.9% shock-above và GDP Q1 revised lên 2.1% xác nhận cầu thực khỏe — expansion broad. Điểm gợn: Chicago PMI rơi 6pp và Richmond sụp (4 vs 8) báo động lượng chậm dần cuối tháng, GDPNow Q2 bị cắt dần 3.8% → 2.8%.\n\n---\n\n## 4. Niềm tin & Tiêu dùng — 🟡 HỖN HỢP\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 09/06 | NFIB Small Business Optimism | 95.3 | 96.0 | ↓ | 🟡 Inline |\n| 12/06 | Michigan Consumer Sentiment | 48.9 | 46.1 | ↑ +4.1pp | 🟢 Tốt |\n| 12/06 | Michigan 1Y Inflation Exp | 4.6% | 4.9% | ↓ | 🟢 Cool |\n| 12/06 | Michigan 5Y Inflation Exp | 3.4% | 3.8% | ↓ | 🟢 Cool |\n| 26/06 | Michigan Consumer Sentiment | 49.5 | 48.9 | ↑ | 🟡 Inline |\n| 26/06 | Michigan 5Y Inflation Exp | 3.3% | 3.4% | ↓ | 🟢 Cool |\n| 30/06 | CB Consumer Confidence | 91.2 | 94.4 | ↑ +0.6pp | 🔴 Yếu |\n\n**Kết luận:** Michigan hồi khỏi đáy (48.9→49.5) và kỳ vọng lạm phát rơi mạnh (5Y về 3.3%) là tín hiệu dovish nhẹ, nhưng mức tuyệt đối vẫn <50 (vùng yếu) và CB Confidence 91.2 hụt dự báo. Mismatch điển hình: sentiment bi quan nhưng Retail Sales +0.9% cho thấy người tiêu dùng vẫn CHI dù không vui.\n\n---\n\n## 5. Nhà ở — 🔴 NGUỘI\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 09/06 | Existing Home Sales | 4.17M | 4.07M | ↑ | 🟡 Inline |\n| 16/06 | Housing Starts (MoM) | -15.4% | — | ↓ | 🔴 Yếu |\n| 17/06 | Pending Home Sales (MoM) | +3.8% | +0.8% | ↑ | 🟢 Tốt |\n| 24/06 | New Home Sales | 580k | 638k | ↓ -7.3% | 🔴 Yếu |\n| 24/06 | Building Permits (MoM) | -0.9% | -0.7% | ↓ | 🔴 Yếu |\n\n**Kết luận:** Cụm nhà ở yếu rõ — Housing Starts sụp -15.4% MoM, New Home Sales -7.3%, Permits âm — phản ứng trực tiếp với lãi suất cao kéo dài (mortgage ~6.8%, 10Y quanh 4.4%). Pending Home Sales +3.8% là điểm sáng lẻ; nhà ở là nhóm chịu \"higher-for-longer\" nặng nhất.\n\n---\n\n## 6. Fed & Lãi suất — 🔴 HAWKISH\n\n| Ngày | Chỉ số | Actual | Forecast | vs Previous | Surprise |\n|---|---|---|---|---|---|\n| 17/06 | Fed Interest Rate Decision | 3.75% | 3.75% | → | 🟡 Inline (hawkish hold) |\n\n| Chỉ số | Đầu tháng | Cuối tháng | Thay đổi |\n|---|---|---|---|\n| Fed Funds Rate (DFF) | 3.62% | 3.63% | → |\n| 10Y Treasury (DGS10) | 4.45% | 4.38% | ↓ -7bp |\n| 2Y Treasury (DGS2) | 3.98% | 4.10% | ↑ +12bp |\n| 2s10s Spread (T10Y2Y) | +0.42pp | +0.30pp | ↓ flatten -12bp |\n| VIX (VIXCLS) | 15.3 | 16.5 | ↑ +1.2 |\n| HY OAS (BAMLH0A0HYM2) | 2.74% | 2.75% | → |\n| 10Y Breakeven (T10YIE) | 2.40% | 2.24% | ↓ -16bp |\n\n**Kết luận:** Fed giữ 3.75% nhưng dot plot dịch LÊN (median năm nay 3.4%→3.8%, năm 1 3.1%→3.6%) — hawkish hold, bớt kỳ vọng cắt. Đường cong flatten (2Y +12bp vượt 10Y -7bp) khi thị trường price OUT cuts sau NFP/Retail beat; breakeven rơi -16bp cho thấy kỳ vọng lạm phát dài hạn hạ dù hard-data còn nóng.\n\n---\n\n## Sector — Phân bổ danh mục\n\n| Sector | ETF | Ngắn hạn | Dài hạn | RS 1M | RS 3M | vs MA50 | Lý do 1 câu |\n|---|---|---|---|---|---|---|---|\n| Healthcare | XLV | **OW** | Neutral | +14.3 | -2.3 | ↑ | Defensive bid + STRONG_INFLOW (MFI 83), dẫn RS 1M cả thị trường |\n| Financials | XLF | **OW** | Neutral | +10.3 | -0.9 | ↑ | Curve dương + no-landing, breadth broad 92%, MFI 70 inflow mạnh |\n| Industrials | XLI | Neutral | Neutral | +7.6 | -1.6 | ↑ | Cyclical engine on (ISM>54) nhưng rs_slope -3.3 momentum chậm lại |\n| Utilities | XLU | Neutral | Neutral | +6.7 | -12.4 | ↑ | RS 1M hồi nhưng RS 3M tệ nhất, rs_slope -3.2, bid phòng thủ tạm |\n| Cons. Staples | XLP | Neutral | Neutral | +6.4 | -7.8 | ↑ | Defensive refuge nhưng OUTFLOW, không catalyst thematic |\n| Real Estate | XLRE | Neutral | Neutral | +5.4 | -3.4 | ↑ | 10Y giảm nhẹ hỗ trợ, nhưng nhà ở nguội đè, breadth thrust âm |\n| Materials | XLB | Neutral | Neutral | +3.1 | -9.2 | ↑ | Copper +10% nhưng USD +1.3% đè, inflow nhẹ |\n| Cons. Disc. | XLY | Neutral | Neutral | +1.5 | -6.2 | ↓ | Retail mạnh nhưng dưới MA50, rs_slope +1.5 đang cải thiện |\n| Comm. Svc | XLC | **UW** | **UW** | -1.6 | -13.3 | ↓ | Dưới cả MA50/MA200, RS 3M -13, mega-cap chưa hồi |\n| Energy | XLE | **UW** | Neutral | -5.9 | -20.2 | ↓ | WTI -29% 1M sụp, dưới MA50, OUTFLOW, RS 3M tệ nhất |\n| Technology | XLK | **UW** | **OW** | -7.2 | +17.6 | ↑ | AI capex bị thử thách, -8.8% 1M OUTFLOW, nhưng RS 3M vẫn +17 (dài hạn giữ) |\n\n> **Cycle context:** Sahm 0.10 — chưa trigger · 2s10s +0.30pp, normal (116 phiên) · Fed hawkish hold, dot plot dịch LÊN (price out cuts H2) · **Scorecard tháng trước (calls 05, chấm 07-03): hit 3/11 (27%)** — SAI nặng ở XLK bullish (RS -7.2), XLV/XLU/XLRE/XLP bearish (đều dương mạnh, defensive winning), XLF bearish (RS +10.3). Điều chỉnh: chuyển XLV/XLF sang OW, bỏ luận điểm \"XLK độc dẫn\", tôn trọng defensive rotation + curve dương ưu ái financials.\n\n---\n\n## Cross-asset snapshot\n\n| Asset | Cuối tháng | Thay đổi 1M | Signal |\n|---|---|---|---|\n| Gold (GC=F) | $4,186 | -5.6% | 🟡 |\n| Copper (HG=F) | $6.22/lb | -4.1% | 🟡 |\n| WTI Oil (CL=F) | $68.35 | -28.8% | 🔴 |\n| DXY (USD Index) | 100.8 | +1.3% | 🟡 |\n| Bitcoin (BTC) | $61,829 | -2.7% | 🔴 |\n\n> WTI sụp -28.8% 1M là cú lớn nhất — kéo tụt XLE, giảm áp lực lạm phát năng lượng đầu vào (bù cho hard-data nóng). USD +1.3% headwind cho multinationals/Materials.\n\n---\n\n## Luận điểm đầu tư nhóm ngành — dự báo tăng trưởng (từ các quỹ)\n\n_Nguồn: J.P. Morgan · Goldman Sachs · State Street SPDR · Morningstar. Đối chiếu với dự báo rotation engine tháng `2026-08`. Tầng cross-check — KHÔNG trộn vào điểm engine._\n\n### XLK — Technology\n- **Engine dự báo:** `INFLOW_LIKELY` (confidence MED, score +0.63). Đồng thuận quỹ: **Mạnh OW** (net +1.00, 4 OW / 0 UW) → ✅ KHỚP.\n- **Luận điểm tăng trưởng (bull):**\n  - J.P. Morgan: Tỷ trọng lớn nhất; AI broadening, EPS mạnh\n  - Goldman Sachs: Semiconductors — hưởng lợi trực tiếp AI buildout, tăng trưởng lợi nhuận mạnh nhất Q2\n  - State Street SPDR: AI-driven earnings rộng + định giá hấp dẫn sau nhịp chỉnh\n  - Morningstar _[định giá]_: Rẻ nhất so với fair value\n- **Chốt:** Quỹ và dự báo macro→flow CÙNG hướng tăng → độ tin cậy cao.\n\n### XLC — Communication Services\n- **Engine dự báo:** `FORMING` (confidence MED, score +0.10). Đồng thuận quỹ: **Mạnh OW** (net +1.00, 1 OW / 0 UW) → ✅ KHỚP.\n- **Luận điểm tăng trưởng (bull):**\n  - State Street SPDR: Quảng cáo số tăng tốc + AI monetization\n- **Chốt:** Quỹ và dự báo macro→flow CÙNG hướng tăng → độ tin cậy cao.\n\n### XLI — Industrials\n- **Engine dự báo:** `FORMING` (confidence HIGH, score +0.74). Đồng thuận quỹ: **OW** (net +0.50, 3 OW / 1 UW) → ✅ KHỚP.\n- **Luận điểm tăng trưởng (bull):**\n  - J.P. Morgan: Theme 'power'/AI infra bổ trợ Tech\n  - Goldman Sachs: Tech hardware/industrials hưởng earnings boost từ AI infra\n  - State Street SPDR: CapEx AI infra, quốc phòng, chính sách tài khoá pro-CapEx\n- **⚠️ Rủi ro / phản biện (bear):**\n  - Morningstar _[định giá]_: Tăng ~17% YTD nhờ AI-buildout\n- **Chốt:** Quỹ và dự báo macro→flow CÙNG hướng tăng → độ tin cậy cao.\n\n### XLY — Consumer Discretionary\n- **Engine dự báo:** `FORMING` (confidence MED, score +0.91). Đồng thuận quỹ: **Mạnh UW** (net -1.00, 0 OW / 1 UW) → ⚠️ LỆCH.\n- **⚠️ Rủi ro / phản biện (bear):**\n  - State Street SPDR: Thu nhập thực yếu, tiết kiệm thấp ép cầu\n- **Chốt:** Engine dự báo tăng nhưng quỹ thận trọng/ngược → soi kỹ trước khi nâng tỷ trọng.\n\n### Quỹ bullish nhưng engine CHƯA dự báo tăng (theo dõi sớm)\n- **XLU Utilities**: quỹ Mạnh OW (net +1.00) vs engine `NEUTRAL` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n- **XLE Energy**: quỹ Mạnh OW (net +1.00) vs engine `OUTFLOW_LIKELY` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n- **XLF Financials**: quỹ Mạnh OW (net +0.67) vs engine `NEUTRAL` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n- **XLV Healthcare**: quỹ OW (net +0.50) vs engine `NEUTRAL` — theme dài hạn quỹ thấy trước khi dòng tiền ngắn hạn xác nhận.\n\n_Sinh tất định bởi `scripts/build_fund_consensus.py` từ `data/fund_views_latest.json` + `data/monthly_rotation_forecast_latest.json`._\n\n---\n*Coverage: 22 daily reports (2026-06); FRED snapshot 2026-06-30; sectors_lite.json + cross_asset_lite.json (fetched 2026-07-03); scorecard 2026-07-03.*\n", "rotation_target": "2026-07", "rotation": [{"ticker": "XLI", "name": "Industrials", "score": 0.877, "phase": "INFLOW_LIKELY"}, {"ticker": "XLF", "name": "Financials", "score": 0.739, "phase": "INFLOW_LIKELY"}, {"ticker": "XLY", "name": "Consumer Discretionary", "score": 0.715, "phase": "INFLOW_LIKELY"}, {"ticker": "XLK", "name": "Technology", "score": 0.385, "phase": "INFLOW_LIKELY"}, {"ticker": "XLC", "name": "Communication Services", "score": 0.03, "phase": "FORMING"}, {"ticker": "XLB", "name": "Materials", "score": 0.126, "phase": "NEUTRAL"}, {"ticker": "XLRE", "name": "Real Estate", "score": -0.324, "phase": "NEUTRAL"}, {"ticker": "XLP", "name": "Consumer Staples", "score": -0.385, "phase": "NEUTRAL"}, {"ticker": "XLU", "name": "Utilities", "score": -0.261, "phase": "OUTFLOW_LIKELY"}, {"ticker": "XLV", "name": "Healthcare", "score": -0.579, "phase": "AVOID"}, {"ticker": "XLE", "name": "Energy", "score": -1.764, "phase": "AVOID"}], "rot_colors": ["#4ade80", "#4ade80", "#4ade80", "#4ade80", "#2dd4bf", "#8b96a3", "#8b96a3", "#8b96a3", "#fbbf24", "#f87171", "#f87171"]}</script>
+<script>
+  const P = JSON.parse(document.getElementById('payload').textContent);
+  const fm = P.fm || {};
+
+  document.getElementById('hero-title').textContent = 'Báo cáo Vĩ mô Mỹ — Tháng ' + (P.month||'');
+  document.getElementById('hero-sub').textContent = 'US Macro Monthly · chia sẻ chỉ-đọc';
+  document.getElementById('hero-takeaway').textContent = fm.key_takeaway || '';
+
+  const BLABEL = {regime:'Chu kỳ', fed_stance:'Fed', economic_health:'Sức khoẻ KT'};
+  const badges = document.getElementById('hero-badges');
+  ['regime','fed_stance','economic_health'].forEach(k=>{
+    if(!fm[k]) return;
+    const d=document.createElement('div'); d.className='badge';
+    d.innerHTML='<b>'+BLABEL[k]+'</b>'+fm[k]; badges.appendChild(d);
+  });
+
+  // Rotation chart
+  if(P.rotation && P.rotation.length){
+    document.getElementById('rot-title').textContent =
+      'Dự báo luân chuyển dòng tiền — tháng ' + P.rotation_target + ' (điểm engine)';
+    const labels = P.rotation.map(r=>r.ticker+' · '+r.name);
+    const scores = P.rotation.map(r=>r.score);
+    new Chart(document.getElementById('rotChart'), {
+      type:'bar',
+      data:{labels, datasets:[{data:scores, backgroundColor:P.rot_colors, borderRadius:5}]},
+      options:{indexAxis:'y', plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:c=>' score '+c.raw.toFixed(2)+'  ('+P.rotation[c.dataIndex].phase+')'}}},
+        scales:{x:{grid:{color:'#1e2b45'},ticks:{color:'#8ba0bd'}},
+                y:{grid:{display:false},ticks:{color:'#e5edf7',font:{size:12}}}}}
+    });
+    const PC={INFLOW_LIKELY:['#4ade80','Nhận tiền'],FORMING:['#2dd4bf','Đang hình thành'],
+      NEUTRAL:['#8b96a3','Trung tính'],OUTFLOW_LIKELY:['#fbbf24','Rời tiền'],AVOID:['#f87171','Tránh']};
+    const lg=document.getElementById('rot-legend');
+    Object.values(PC).forEach(([c,t])=>{const s=document.createElement('span');
+      s.innerHTML='<span class="dot" style="background:'+c+'"></span>'+t; lg.appendChild(s);});
+  } else {
+    document.getElementById('rot-card').style.display='none';
+  }
+
+  // Report body
+  marked.setOptions({gfm:true, breaks:false});
+  document.getElementById('report').innerHTML = marked.parse(P.body||'');
+
+  document.getElementById('foot').textContent =
+    'Sinh tự động từ hệ thống US Macro Tracking · báo cáo tĩnh tháng ' + P.month + '. Không phải khuyến nghị đầu tư.';
+</script>
+</body>
+</html>
