@@ -2153,7 +2153,7 @@ function fmtRet(v) {
 
 // Sub-industry momentum drill-down for the monthly tab. Reads the cap-weighted
 // 1M contribution baked into D.sectors by fetch_sectors.build_sub_industry_momentum.
-let sectorMomentumMetric = "ret"; // 'ret' = lợi suất tuyệt đối | 'rs' = RS vs SPY — nhớ giữa các lần render
+var sectorMomentumMetric = "ret"; // 'ret' = lợi suất tuyệt đối | 'rs' = RS vs SPY — nhớ giữa các lần render
 function renderSectorMomentum(el) {
   const S = (D.sectors && D.sectors.sectors) || {};
   const summary = (D.sectors && D.sectors.momentum_summary) || {};
